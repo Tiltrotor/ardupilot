@@ -639,3 +639,68 @@ void Compass::motor_compensation_type(const uint8_t comp_type)
         }
     }
 }
+
+#define MAG_OFS_X 5.0
+#define MAG_OFS_Y 13.0
+#define MAG_OFS_Z -18.0
+
+// Update raw magnetometer values from HIL data
+//
+void Compass::setHIL(float roll, float pitch, float yaw)
+{
+    Matrix3f R;
+
+    // create a rotation matrix for the given attitude
+    R.from_euler(roll, pitch, yaw);
+
+    if (_last_declination != get_declination()) {
+        _setup_earth_field();
+        _last_declination = get_declination();
+    }
+
+    // convert the earth frame magnetic vector to body frame, and
+    // apply the offsets
+    _hil_mag = R.mul_transpose(_Bearth);
+    _hil_mag -= Vector3f(MAG_OFS_X, MAG_OFS_Y, MAG_OFS_Z);
+
+    // apply default board orientation for this compass type. This is
+    // a noop on most boards
+    _hil_mag.rotate(MAG_BOARD_ORIENTATION);
+
+    // add user selectable orientation
+    _hil_mag.rotate((enum Rotation)get_orientation().get());
+
+    if (!_external[0]) {
+        // and add in AHRS_ORIENTATION setting if not an external compass
+        _hil_mag.rotate(get_board_orientation());
+    }
+
+    _healthy[0] = true;
+}
+
+// Update raw magnetometer values from HIL mag vector
+//
+void Compass::setHIL(const Vector3f &mag)
+{
+    _hil_mag.x = mag.x;
+    _hil_mag.y = mag.y;
+    _hil_mag.z = mag.z;
+    _healthy[0] = true;
+}
+
+const Vector3f& Compass::getHIL() const {
+    return _hil_mag;
+}
+
+// setup _Bearth
+void Compass::_setup_earth_field(void)
+{
+    // assume a earth field strength of 400
+    _Bearth(400, 0, 0);
+    
+    // rotate _Bearth for inclination and declination. -66 degrees
+    // is the inclination in Canberra, Australia
+    Matrix3f R;
+    R.from_euler(0, ToRad(66), get_declination());
+    _Bearth = R * _Bearth;
+}
