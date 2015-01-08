@@ -123,6 +123,8 @@
 #elif FRAME_CONFIG == COAX_FRAME
  # define FRAME_CONFIG_STRING "COAX"
 #else
+ # define FRAME_CONFIG_STRING "TILTROTOR_Y6"
+#else
  # define FRAME_CONFIG_STRING "UNKNOWN"
 #endif
 
@@ -150,7 +152,19 @@
   # define RATE_YAW_P                   0.150f
   # define RATE_YAW_I                   0.015f
 #endif
-
+/////////////////////////////////////////////////////////////////////////////////
+// Tiltrotor_Y6 defaults
+#if FRAME_CONFIG == TILTROTOR_Y6
+  # define RC_FAST_SPEED                125
+  # define WP_YAW_BEHAVIOR_DEFAULT      WP_YAW_BEHAVIOR_LOOK_AHEAD
+  # define RATE_ROLL_P                  0.1f
+  # define RATE_ROLL_D                  0.006f
+  # define RATE_PITCH_P                 0.1f
+  # define RATE_PITCH_D                 0.006f
+  # define RATE_YAW_P                   0.150f
+  # define RATE_YAW_I                   0.015f
+  # define AUTOTUNE_ENABLED             DISABLED
+#endif
 //////////////////////////////////////////////////////////////////////////////
 // ADC Enable - used to eliminate for systems which don't have ADC.
 //
