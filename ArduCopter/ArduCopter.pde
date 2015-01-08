@@ -103,10 +103,12 @@
 #include <GCS_MAVLink.h>        // MAVLink GCS definitions
 #include <AP_SerialManager.h>   // Serial manager library
 #include <AP_GPS.h>             // ArduPilot GPS library
+#include <AP_GPS_Glitch.h>      // GPS glitch protection library
 #include <DataFlash.h>          // ArduPilot Mega Flash Memory Library
 #include <AP_ADC.h>             // ArduPilot Mega Analog to Digital Converter Library
 #include <AP_ADC_AnalogSource.h>
 #include <AP_Baro.h>
+#include <AP_Baro_Glitch.h>     // Baro glitch protection library
 #include <AP_Compass.h>         // ArduPilot Mega Magnetometer Library
 #include <AP_Math.h>            // ArduPilot Mega Vector/Matrix math Library
 #include <AP_Curve.h>           // Curve used to linearlise throttle pwm to thrust
@@ -116,7 +118,6 @@
 #include <AP_Mission.h>         // Mission command library
 #include <AP_Rally.h>           // Rally point library
 #include <AC_PID.h>             // PID library
-#include <AC_PI_2D.h>           // PID library (2-axis)
 #include <AC_HELI_PID.h>        // Heli specific Rate PID library
 #include <AC_P.h>               // P library
 #include <AC_AttitudeControl.h> // Attitude control library
@@ -227,7 +228,11 @@ static void gcs_send_text_fmt(const prog_char_t *fmt, ...);
 ////////////////////////////////////////////////////////////////////////////////
 // Dataflash
 ////////////////////////////////////////////////////////////////////////////////
-#if defined(HAL_BOARD_LOG_DIRECTORY)
+#if CONFIG_HAL_BOARD == HAL_BOARD_APM2
+static DataFlash_APM2 DataFlash;
+#elif CONFIG_HAL_BOARD == HAL_BOARD_APM1
+static DataFlash_APM1 DataFlash;
+#elif defined(HAL_BOARD_LOG_DIRECTORY)
 static DataFlash_File DataFlash(HAL_BOARD_LOG_DIRECTORY);
 #else
 static DataFlash_Empty DataFlash;
@@ -263,12 +268,32 @@ static int32_t pitch_limit_min_cd = -2500;
 
 static AP_GPS  gps;
 
+static GPS_Glitch gps_glitch(gps);
+
 // flight modes convenience array
 static AP_Int8 *flight_modes = &g.flight_mode1;
 
 static AP_Baro barometer;
 
-static Compass compass;
+static Baro_Glitch baro_glitch(barometer);
+
+#if CONFIG_COMPASS == HAL_COMPASS_PX4
+static AP_Compass_PX4 compass;
+#elif CONFIG_COMPASS == HAL_COMPASS_VRBRAIN
+static AP_Compass_VRBRAIN compass;
+#elif CONFIG_COMPASS == HAL_COMPASS_HMC5843
+static AP_Compass_HMC5843 compass;
+#elif CONFIG_COMPASS == HAL_COMPASS_HIL
+static AP_Compass_HIL compass;
+#elif CONFIG_COMPASS == HAL_COMPASS_AK8963
+static AP_Compass_AK8963_MPU9250 compass;
+#else
+ #error Unrecognized CONFIG_COMPASS setting
+#endif
+
+#if CONFIG_HAL_BOARD == HAL_BOARD_APM1
+AP_ADC_ADS7844 apm1_adc;
+#endif
 
 AP_InertialSensor ins;
 
@@ -352,29 +377,25 @@ AP_Airspeed airspeed(aparmTR);
 static union {
     struct {
         uint8_t unused1             : 1; // 0
-        uint8_t simple_mode         : 2; // 1,2     // This is the state of simple mode : 0 = disabled ; 1 = SIMPLE ; 2 = SUPERSIMPLE
-        uint8_t pre_arm_rc_check    : 1; // 3       // true if rc input pre-arm checks have been completed successfully
-        uint8_t pre_arm_check       : 1; // 4       // true if all pre-arm checks (rc, accel calibration, gps lock) have been performed
-        uint8_t auto_armed          : 1; // 5       // stops auto missions from beginning until throttle is raised
-        uint8_t logging_started     : 1; // 6       // true if dataflash logging has started
-        uint8_t land_complete       : 1; // 7       // true if we have detected a landing
+        uint8_t simple_mode         : 2; // 1,2 // This is the state of simple mode : 0 = disabled ; 1 = SIMPLE ; 2 = SUPERSIMPLE
+        uint8_t pre_arm_rc_check    : 1; // 3   // true if rc input pre-arm checks have been completed successfully
+        uint8_t pre_arm_check       : 1; // 4   // true if all pre-arm checks (rc, accel calibration, gps lock) have been performed
+        uint8_t auto_armed          : 1; // 5   // stops auto missions from beginning until throttle is raised
+        uint8_t logging_started     : 1; // 6   // true if dataflash logging has started
+        uint8_t land_complete       : 1; // 7   // true if we have detected a landing
         uint8_t new_radio_frame     : 1; // 8       // Set true if we have new PWM data to act on from the Radio
-        uint8_t CH7_flag            : 2; // 9,10    // ch7 aux switch : 0 is low or false, 1 is center or true, 2 is high
+        uint8_t CH7_flag            : 2; // 9,10   // ch7 aux switch : 0 is low or false, 1 is center or true, 2 is high
         uint8_t CH8_flag            : 2; // 11,12   // ch8 aux switch : 0 is low or false, 1 is center or true, 2 is high
-        uint8_t CH9_flag            : 2; // 13,14   // ch9 aux switch : 0 is low or false, 1 is center or true, 2 is high
-        uint8_t CH10_flag           : 2; // 15,16   // ch10 aux switch : 0 is low or false, 1 is center or true, 2 is high
-        uint8_t CH11_flag           : 2; // 17,18   // ch11 aux switch : 0 is low or false, 1 is center or true, 2 is high
-        uint8_t CH12_flag           : 2; // 19,20   // ch12 aux switch : 0 is low or false, 1 is center or true, 2 is high
-        uint8_t usb_connected       : 1; // 21      // true if APM is powered from USB connection
-        uint8_t rc_receiver_present : 1; // 22      // true if we have an rc receiver present (i.e. if we've ever received an update
-        uint8_t compass_mot         : 1; // 23      // true if we are currently performing compassmot calibration
-        uint8_t motor_test          : 1; // 24      // true if we are currently performing the motors test
-        uint8_t initialised         : 1; // 25      // true once the init_ardupilot function has completed.  Extended status to GCS is not sent until this completes
-        uint8_t land_complete_maybe : 1; // 26      // true if we may have landed (less strict version of land_complete)
-        uint8_t throttle_zero       : 1; // 27      // true if the throttle stick is at zero, debounced
-        uint8_t system_time_set     : 1; // 28      // true if the system time has been set from the GPS
-        uint8_t gps_base_pos_set    : 1; // 29      // true when the gps base position has been set (used for RTK gps only)
-        enum HomeState home_state   : 2; // 30,31   // home status (unset, set, locked)
+        uint8_t usb_connected       : 1; // 13      // true if APM is powered from USB connection
+        uint8_t rc_receiver_present : 1; // 14  // true if we have an rc receiver present (i.e. if we've ever received an update
+        uint8_t compass_mot         : 1; // 15  // true if we are currently performing compassmot calibration
+        uint8_t motor_test          : 1; // 16  // true if we are currently performing the motors test
+        uint8_t initialised         : 1; // 17  // true once the init_ardupilot function has completed.  Extended status to GCS is not sent until this completes
+        uint8_t land_complete_maybe : 1; // 18  // true if we may have landed (less strict version of land_complete)
+        uint8_t throttle_zero       : 1; // 19  // true if the throttle stick is at zero, debounced
+        uint8_t system_time_set     : 1; // 20  // true if the system time has been set from the GPS
+        uint8_t gps_base_pos_set    : 1; // 21  // true when the gps base position has been set (used for RTK gps only)
+        enum HomeState home_state   : 2; // 22,23 - home status (unset, set, locked)
     };
     uint32_t value;
 } ap;
@@ -413,6 +434,7 @@ static struct {
     uint8_t rc_override_active  : 1; // 0   // true if rc control are overwritten by ground station
     uint8_t radio               : 1; // 1   // A status flag for the radio failsafe
     uint8_t battery             : 1; // 2   // A status flag for the battery failsafe
+    uint8_t gps                 : 1; // 3   // A status flag for the gps failsafe
     uint8_t gcs                 : 1; // 4   // A status flag for the ground station failsafe
     uint8_t ekf                 : 1; // 5   // true if ekf failsafe has occurred
 
@@ -449,17 +471,17 @@ static struct {
 #endif
 
 #if FRAME_CONFIG == HELI_FRAME  // helicopter constructor requires more arguments
-static MOTOR_CLASS motors(g.rc_1, g.rc_2, g.rc_3, g.rc_4, g.rc_7, g.rc_8, g.heli_servo_1, g.heli_servo_2, g.heli_servo_3, g.heli_servo_4, MAIN_LOOP_RATE);
+static MOTOR_CLASS motors(g.rc_1, g.rc_2, g.rc_3, g.rc_4, g.rc_7, g.rc_8, g.heli_servo_1, g.heli_servo_2, g.heli_servo_3, g.heli_servo_4);
 #elif FRAME_CONFIG == TRI_FRAME  // tri constructor requires additional rc_7 argument to allow tail servo reversing
-static MOTOR_CLASS motors(g.rc_1, g.rc_2, g.rc_3, g.rc_4, g.rc_7, MAIN_LOOP_RATE);
+static MOTOR_CLASS motors(g.rc_1, g.rc_2, g.rc_3, g.rc_4, g.rc_7);
 #elif FRAME_CONFIG == SINGLE_FRAME  // single constructor requires extra servos for flaps
-static MOTOR_CLASS motors(g.rc_1, g.rc_2, g.rc_3, g.rc_4, g.single_servo_1, g.single_servo_2, g.single_servo_3, g.single_servo_4, MAIN_LOOP_RATE);
+static MOTOR_CLASS motors(g.rc_1, g.rc_2, g.rc_3, g.rc_4, g.single_servo_1, g.single_servo_2, g.single_servo_3, g.single_servo_4);
 #elif FRAME_CONFIG == COAX_FRAME  // single constructor requires extra servos for flaps
 static MOTOR_CLASS motors(g.rc_1, g.rc_2, g.rc_3, g.rc_4, g.single_servo_1, g.single_servo_2);
 #elif FRAME_CONFIG == TILTROTOR_Y6_FRAME  // single constructor for Tiltrotor_y6
 static MOTOR_CLASS motors(g.rc_1, g.rc_2, g.rc_3, g.rc_4, g.single_servo_1, g.single_servo_2, g.single_servo_3, g.single_servo_4, MAIN_LOOP_RATE); //Copy of Single Frame
 #else
-static MOTOR_CLASS motors(g.rc_1, g.rc_2, g.rc_3, g.rc_4, MAIN_LOOP_RATE);
+static MOTOR_CLASS motors(g.rc_1, g.rc_2, g.rc_3, g.rc_4);
 #endif
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -611,7 +633,11 @@ static float G_Dt = 0.02;
 ////////////////////////////////////////////////////////////////////////////////
 // Inertial Navigation
 ////////////////////////////////////////////////////////////////////////////////
-static AP_InertialNav_NavEKF inertial_nav(ahrs);
+#if AP_AHRS_NAVEKF_AVAILABLE
+static AP_InertialNav_NavEKF inertial_nav(ahrs, barometer, gps_glitch, baro_glitch);
+#else
+static AP_InertialNav inertial_nav(ahrs, barometer, gps_glitch, baro_glitch);
+#endif
 
 ////////////////////////////////////////////////////////////////////////////////
 // Attitude, Position and Waypoint navigation objects
@@ -628,8 +654,8 @@ AC_AttitudeControl attitude_control(ahrs, aparm, motors, g.p_stabilize_roll, g.p
                         g.pid_rate_roll, g.pid_rate_pitch, g.pid_rate_yaw);
 #endif
 AC_PosControl pos_control(ahrs, inertial_nav, motors, attitude_control,
-                        g.p_alt_hold, g.p_vel_z, g.pid_accel_z,
-                        g.p_pos_xy, g.pi_vel_xy);
+                        g.p_alt_hold, g.p_throttle_rate, g.pid_throttle_accel,
+                        g.p_loiter_pos, g.pid_loiter_rate_lat, g.pid_loiter_rate_lon);
 static AC_WPNav wp_nav(inertial_nav, ahrs, pos_control, attitude_control);
 static AC_Circle circle_nav(inertial_nav, ahrs, pos_control);
 
@@ -650,7 +676,7 @@ static uint32_t rtl_loiter_start_time;
 // Used to exit the roll and pitch auto trim function
 static uint8_t auto_trim_counter;
 
-// Reference to the relay object
+// Reference to the relay object (APM1 -> PORTL 2) (APM2 -> PORTB 7)
 static AP_Relay relay;
 
 // handle repeated servo and relay events
@@ -763,7 +789,7 @@ static const AP_Scheduler::Task scheduler_tasks[] PROGMEM = {
     { auto_trim,            40,     14 },
     { update_altitude,      40,    100 },
     { run_nav_updates,       8,     80 },
-    { update_thr_average,   40,     10 },
+    { update_thr_cruise,    40,     10 },
     { three_hz_loop,       133,      9 },
     { compass_accumulate,    8,     42 },
     { barometer_accumulate,  8,     25 },
@@ -776,7 +802,7 @@ static const AP_Scheduler::Task scheduler_tasks[] PROGMEM = {
 #endif
     { update_notify,         8,     10 },
     { one_hz_loop,         400,     42 },
-    { ekf_check,            40,      2 },
+    { ekf_dcm_check,        40,      2 },
     { crash_check,          40,      2 },
     { landinggear_update,   40,      1 },
     { gcs_check_input,	     8,    550 },
@@ -842,7 +868,7 @@ static const AP_Scheduler::Task scheduler_tasks[] PROGMEM = {
     { auto_trim,            10,     140 },
     { update_altitude,      10,    1000 },
     { run_nav_updates,       4,     800 },
-    { update_thr_average,    1,      50 },
+    { update_thr_cruise,     1,      50 },
     { three_hz_loop,        33,      90 },
     { compass_accumulate,    2,     420 },
     { barometer_accumulate,  2,     250 },
@@ -855,7 +881,7 @@ static const AP_Scheduler::Task scheduler_tasks[] PROGMEM = {
 #endif
     { update_notify,         2,     100 },
     { one_hz_loop,         100,     420 },
-    { ekf_check,            10,      20 },
+    { ekf_dcm_check,        10,      20 },
     { crash_check,          10,      20 },
     { landinggear_update,   10,      10 },
     { gcs_check_input,	     2,     550 },
@@ -1003,9 +1029,6 @@ static void fast_loop()
 
     // run the attitude controllers
     update_flight_mode();
-
-    // update home from EKF if necessary
-    update_home_from_EKF();
 }
 
 // rc_loops - reads user input from transmitter/receiver
@@ -1027,9 +1050,6 @@ static void throttle_loop()
 
     // check if we've landed
     update_land_detector();
-
-    // update throttle_low_comp value (controls priority of throttle vs attitude control)
-    update_throttle_low_comp();
 
     // check auto_armed status
     update_auto_armed();
@@ -1081,10 +1101,6 @@ static void ten_hz_logging_loop()
 {
     if (should_log(MASK_LOG_ATTITUDE_MED)) {
         Log_Write_Attitude();
-        Log_Write_Rate();
-    }
-    if (should_log(MASK_LOG_MOTBATT)) {
-        Log_Write_MotBatt();
     }
     if (should_log(MASK_LOG_RCIN)) {
         DataFlash.Log_Write_RCIN();
@@ -1109,7 +1125,6 @@ static void fifty_hz_logging_loop()
 #if HIL_MODE == HIL_MODE_DISABLED
     if (should_log(MASK_LOG_ATTITUDE_FAST)) {
         Log_Write_Attitude();
-        Log_Write_Rate();
     }
 
     if (should_log(MASK_LOG_IMU)) {
@@ -1174,15 +1189,6 @@ static void one_hz_loop()
 
 #if AP_TERRAIN_AVAILABLE
     terrain.update();
-
-    // tell the rangefinder our height, so it can go into power saving
-    // mode if available
-#if CONFIG_SONAR == ENABLED
-    float height;
-    if (terrain.height_above_terrain(height, true)) {
-        sonar.set_estimated_terrain_height(height);
-    }
-#endif
 #endif
 
 #if AC_FENCE == ENABLED
@@ -1197,11 +1203,12 @@ static void one_hz_loop()
 static void update_GPS(void)
 {
     static uint32_t last_gps_reading[GPS_MAX_INSTANCES];   // time of last gps message
+    bool report_gps_glitch;
     bool gps_updated = false;
 
     gps.update();
 
-    // log after every gps message
+    // logging and glitch protection run after every gps message
     for (uint8_t i=0; i<gps.num_sensors(); i++) {
         if (gps.last_message_time_ms(i) != last_gps_reading[i]) {
             last_gps_reading[i] = gps.last_message_time_ms(i);
@@ -1216,8 +1223,25 @@ static void update_GPS(void)
     }
 
     if (gps_updated) {
+        // run glitch protection and update AP_Notify if home has been initialised
+        if (home_is_set()) {
+            gps_glitch.check_position();
+            report_gps_glitch = (gps_glitch.glitching() && !ap.usb_connected && hal.util->safety_switch_state() != AP_HAL::Util::SAFETY_DISARMED);
+            if (AP_Notify::flags.gps_glitching != report_gps_glitch) {
+                if (gps_glitch.glitching()) {
+                    Log_Write_Error(ERROR_SUBSYSTEM_GPS, ERROR_CODE_GPS_GLITCH);
+                }else{
+                    Log_Write_Error(ERROR_SUBSYSTEM_GPS, ERROR_CODE_ERROR_RESOLVED);
+                }
+                AP_Notify::flags.gps_glitching = report_gps_glitch;
+            }
+        }
+
         // set system time if necessary
         set_system_time_from_GPS();
+
+        // update home from GPS location if necessary
+        update_home_from_GPS();
 
         // check gps base position (used for RTK only)
         check_gps_base_pos();
@@ -1232,6 +1256,9 @@ static void update_GPS(void)
 #endif
         }
     }
+
+    // check for loss of gps
+    failsafe_gps_check();
 }
 
 /*
