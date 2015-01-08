@@ -128,6 +128,7 @@
   # define RATE_YAW_I                   0.015f
 #endif
 
+
 /////////////////////////////////////////////////////////////////////////////////
 // Tiltrotor_Y6 defaults
 #if FRAME_CONFIG == TILTROTOR_Y6_FRAME
