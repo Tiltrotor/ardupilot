@@ -102,6 +102,8 @@ static NOINLINE void send_heartbeat(mavlink_channel_t chan)
         MAV_TYPE_ROCKET,
 #elif (FRAME_CONFIG == COAX_FRAME)  //because mavlink did not define a singlecopter, we use a rocket
         MAV_TYPE_ROCKET,
+#elif (FRAME_CONFIG == TILTROTOR_Y6_FRAME)  //because mavlink did not define a Tiltrotor_Y6, we use a Hexarotor to be consistent with a Y6
+        MAV_TYPE_HEXAROTOR,
 #else
   #error Unrecognised frame type
 #endif
