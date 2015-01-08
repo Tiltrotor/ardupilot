@@ -481,6 +481,7 @@ static MOTOR_CLASS motors(g.rc_1, g.rc_2, g.rc_3, g.rc_4, g.single_servo_1, g.si
 static MOTOR_CLASS motors(g.rc_1, g.rc_2, g.rc_3, g.rc_4, g.single_servo_1, g.single_servo_2);
 #elif FRAME_CONFIG == TILTROTOR_Y6_FRAME  // single constructor for Tiltrotor_y6
 static MOTOR_CLASS motors(g.rc_1, g.rc_2, g.rc_3, g.rc_4, g.single_servo_1, g.single_servo_2, g.single_servo_3, g.single_servo_4, MAIN_LOOP_RATE); //Copy of Single Frame
+
 #else
 static MOTOR_CLASS motors(g.rc_1, g.rc_2, g.rc_3, g.rc_4, MAIN_LOOP_RATE);
 #endif
