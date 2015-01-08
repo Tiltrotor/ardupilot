@@ -157,6 +157,7 @@
 /////////////////////////////////////////////////////////////////////////////////
 // Tiltrotor_Y6 defaults
 #if FRAME_CONFIG == TILTROTOR_Y6_FRAME
+
   # define WP_YAW_BEHAVIOR_DEFAULT      WP_YAW_BEHAVIOR_LOOK_AHEAD
   # define RATE_ROLL_P                  0.1f
   # define RATE_ROLL_D                  0.006f
