@@ -499,7 +499,7 @@ const AP_Param::Info var_info[] PROGMEM = {
     // @User: Standard
        TSCALAR(pitch_limit_min_cd,     "LIM_PITCH_MIN",  -20),
 
-    
+
     // @Param: THR_MAX
     // @DisplayName: Minimum Throttle
     // @Description: The minimum throttle setting to which the autopilot will apply.
