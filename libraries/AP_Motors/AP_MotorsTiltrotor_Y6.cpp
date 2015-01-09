@@ -80,7 +80,6 @@ const AP_Param::GroupInfo AP_MotorsTiltrotor_Y6::var_info[] PROGMEM = {
 };
 // init
 void AP_MotorsTiltrotor_Y6::Init()
-
 {
     // call parent Init function to set-up throttle curve
     AP_Motors::Init();
