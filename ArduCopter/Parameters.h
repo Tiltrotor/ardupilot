@@ -347,6 +347,7 @@ public:
         k_param_pid_rate_roll_aero, //249 Added for the aerodynamic surface that controls roll rate on a tiltrotor_y6
         k_param_pid_rate_yaw_mot, //250 Added for the Yaw rate Motor contribution for a Tiltrotor_Y6
 
+
         // 254,255: reserved
     };
 
@@ -447,7 +448,6 @@ public:
     RC_Channel      single_servo_1, single_servo_2, single_servo_3, single_servo_4;     // servos for four flaps
     AP_Int16        roll_limit_cd;
     AP_Int32        airspeed_cruise_cm;
-
 #endif
 
     // RC channels
@@ -501,7 +501,6 @@ public:
 
     AC_P                    p_vel_z;
     AC_PID                  pid_accel_z;
-
 
     AC_P                    p_pos_xy;
     AC_P                    p_stabilize_roll;
