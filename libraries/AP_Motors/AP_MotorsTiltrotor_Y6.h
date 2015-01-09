@@ -1,10 +1,10 @@
 // -*- tab-width: 4; Mode: C++; c-basic-offset: 4; indent-tabs-mode: nil -*-
 
-/// @file	AP_MotorsSingle.h
-/// @brief	Motor and Servo control class for Singlecopters
+/// @file	AP_MotorsTiltrotor_Y6.h (Started with Copy paste of AP_MotorsSingle.h)
+/// @brief	Motor and Servo control class for Tiltrotor_Y6
 
-#ifndef __AP_MOTORS_SING_H__
-#define __AP_MOTORS_SING_H__
+#ifndef __AP_MOTORS_TRY6_H__
+#define __AP_MOTORS_TRY6_H__
 
 #include <AP_Common.h>
 #include <AP_Math.h>        // ArduPilot Mega Vector/Matrix math Library
@@ -20,12 +20,12 @@
 
 #define AP_MOTORS_SINGLE_SERVO_INPUT_RANGE      4500    // roll or pitch input of -4500 will cause servos to their minimum (i.e. radio_min), +4500 will move them to their maximum (i.e. radio_max)
 
-/// @class      AP_MotorsSingle
-class AP_MotorsSingle : public AP_Motors {
+/// @class      AP_MotorsTiltrotor_Y6
+class AP_MotorsTiltrotor_Y6 : public AP_Motors {
 public:
 
     /// Constructor
-    AP_MotorsSingle( RC_Channel& rc_roll, RC_Channel& rc_pitch, RC_Channel& rc_throttle, RC_Channel& rc_yaw, RC_Channel& servo1, RC_Channel& servo2, RC_Channel& servo3, RC_Channel& servo4, uint16_t speed_hz = AP_MOTORS_SPEED_DEFAULT) :
+    AP_MotorsTiltrotor_Y6( RC_Channel& rc_roll, RC_Channel& rc_pitch, RC_Channel& rc_throttle, RC_Channel& rc_yaw, RC_Channel& servo1, RC_Channel& servo2, RC_Channel& servo3, RC_Channel& servo4, uint16_t speed_hz = AP_MOTORS_SPEED_DEFAULT) :
         AP_Motors(rc_roll, rc_pitch, rc_throttle, rc_yaw, speed_hz),
         _servo1(servo1),
         _servo2(servo2),
@@ -74,4 +74,4 @@ protected:
     RC_Channel&         _servo4;
 };
 
-#endif  // AP_MOTORSSINGLE
+#endif  // AP_MOTORSTILTROTOR_Y6
