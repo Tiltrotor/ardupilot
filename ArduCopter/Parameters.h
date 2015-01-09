@@ -315,6 +315,9 @@ public:
         k_param_acro_balance_roll,
         k_param_acro_balance_pitch,
         k_param_acro_yaw_p, // 244
+        k_param_pid_rate_pit_aero, // 245 Added for the aerodynamic surface that controls pitch rate on a tiltrotor_y6
+        k_param_pid_rate_roll_aero,//246 Added for the aerodynamic surface that controls roll rate on a tiltrotor_y6
+        k_param_pid_rate_yaw_mot, //247 Added for the Yaw rate Motor contribution for a Tiltrotor_Y6
 
         // 254,255: reserved
     };
@@ -453,6 +456,13 @@ public:
     AC_PID                  pid_loiter_rate_lat;
     AC_PID                  pid_loiter_rate_lon;
 
+#if FRAME_CONFIG ==     TILTROTOR_Y6_FRAME        // Pitch and Roll Rate P for the aerodynamic surfaces of a TILTROTOR_Y6_FRAME
+    AC_PID          		pid_rate_pit_aero;
+    AC_PID          		pid_rate_roll_aero;
+    AC_PID                  pid_rate_yaw_mot;
+#endif
+
+
     AC_P                    p_throttle_rate;
     AC_PID                  pid_throttle_accel;
 
@@ -522,6 +532,12 @@ public:
 
         p_throttle_rate         (THROTTLE_RATE_P),
         pid_throttle_accel      (THROTTLE_ACCEL_P,      THROTTLE_ACCEL_I,       THROTTLE_ACCEL_D,       THROTTLE_ACCEL_IMAX),
+
+#if FRAME_CONFIG == TILTROTOR_Y6_FRAME
+        pid_rate_pit_aero     	(RATE_PIT_P_AERO,       RATE_PIT_I_AERO,        RATE_PIT_D_AERO,       RATE_PIT_IMAX_A),
+        pid_rate_roll_aero     	(RATE_ROL_P_AERO,       RATE_ROL_I_AERO,        RATE_ROL_D_AERO,       RATE_ROL_IMAX_A),
+        pid_rate_yaw_mot     	(RATE_YAW_P_MOT,        RATE_YAW_I_MOT,         RATE_YAW_D_MOT,        RATE_YAW_IMAX_M),
+#endif
 
         // P controller	        initial P
         //----------------------------------------------------------------------
