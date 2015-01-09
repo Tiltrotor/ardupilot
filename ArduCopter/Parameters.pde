@@ -758,7 +758,6 @@ const AP_Param::Info var_info[] PROGMEM = {
 #endif
 
 
-<<<<<<< 3b6d9b5460b47cb03a81981636ab3ae40baecad9
 #if FRAME_CONFIG ==     TILTROTOR_Y6_FRAME    	
 	// @Param: RATE_AR_ROL_P
     // @DisplayName: Aerodynamic Elevon Roll axis rate controller P gain used in a Tiltrotor_Y6 ONLY
@@ -850,6 +849,7 @@ const AP_Param::Info var_info[] PROGMEM = {
     // @User: Standard
     GGROUP(pid_rate_yaw_mot,    "RATE_MT_YAW_", AC_PID),
 #endif
+
 
     // @Param: VEL_XY_P
     // @DisplayName: Velocity (horizontal) P gain
