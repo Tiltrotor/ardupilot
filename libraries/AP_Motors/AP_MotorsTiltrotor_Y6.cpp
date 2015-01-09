@@ -15,19 +15,19 @@
  */
 
 /*
- *       AP_MotorsSingle.cpp - ArduCopter motors library
- *       Code by RandyMackay. DIYDrones.com
+ *       AP_MotorsTiltrotor_Y6.cpp - ArduCopter motors library
+ *       Code by RandyMackay. DIYDrones.com - Tiltrotor Y6 was a copy past of Single Frame with an evolution of changes
  *
  */
 
 #include <AP_HAL.h>
 #include <AP_Math.h>
-#include "AP_MotorsSingle.h"
+#include "AP_MotorsTiltrotor_Y6.h"
 
 extern const AP_HAL::HAL& hal;
 
 
-const AP_Param::GroupInfo AP_MotorsSingle::var_info[] PROGMEM = {
+const AP_Param::GroupInfo AP_MotorsTiltrotor_Y6::var_info[] PROGMEM = {
     // 0 was used by TB_RATIO
 
     // @Param: TCRV_ENABLE
@@ -35,7 +35,7 @@ const AP_Param::GroupInfo AP_MotorsSingle::var_info[] PROGMEM = {
     // @Description: Controls whether a curve is used to linearize the thrust produced by the motors
     // @User: Advanced
     // @Values: 0:Disabled,1:Enable
-    AP_GROUPINFO("TCRV_ENABLE", 1, AP_MotorsSingle, _throttle_curve_enabled, THROTTLE_CURVE_ENABLED),
+    AP_GROUPINFO("TCRV_ENABLE", 1, AP_MotorsTiltrotor_Y6, _throttle_curve_enabled, THROTTLE_CURVE_ENABLED),
 
     // @Param: TCRV_MIDPCT
     // @DisplayName: Thrust Curve mid-point percentage
@@ -43,7 +43,7 @@ const AP_Param::GroupInfo AP_MotorsSingle::var_info[] PROGMEM = {
     // @User: Advanced
     // @Range: 20 80
     // @Increment: 1
-    AP_GROUPINFO("TCRV_MIDPCT", 2, AP_MotorsSingle, _throttle_curve_mid, THROTTLE_CURVE_MID_THRUST),
+    AP_GROUPINFO("TCRV_MIDPCT", 2, AP_MotorsTiltrotor_Y6, _throttle_curve_mid, THROTTLE_CURVE_MID_THRUST),
 
     // @Param: TCRV_MAXPCT
     // @DisplayName: Thrust Curve max thrust percentage
@@ -51,43 +51,43 @@ const AP_Param::GroupInfo AP_MotorsSingle::var_info[] PROGMEM = {
     // @User: Advanced
     // @Range: 20 80
     // @Increment: 1
-    AP_GROUPINFO("TCRV_MAXPCT", 3, AP_MotorsSingle, _throttle_curve_max, THROTTLE_CURVE_MAX_THRUST),
+    AP_GROUPINFO("TCRV_MAXPCT", 3, AP_MotorsTiltrotor_Y6, _throttle_curve_max, THROTTLE_CURVE_MAX_THRUST),
 
     // @Param: SPIN_ARMED
     // @DisplayName: Motors always spin when armed
     // @Description: Controls whether motors always spin when armed (must be below THR_MIN)
     // @Values: 0:Do Not Spin,70:VerySlow,100:Slow,130:Medium,150:Fast
     // @User: Standard
-    AP_GROUPINFO("SPIN_ARMED", 5, AP_MotorsSingle, _spin_when_armed, AP_MOTORS_SPIN_WHEN_ARMED),
+    AP_GROUPINFO("SPIN_ARMED", 5, AP_MotorsTiltrotor_Y6, _spin_when_armed, AP_MOTORS_SPIN_WHEN_ARMED),
 
     // @Param: REV_ROLL
     // @DisplayName: Reverse roll feedback 
     // @Description: Ensure the feedback is negative
     // @Values: -1:Opposite direction,1:Same direction
-    AP_GROUPINFO("REV_ROLL", 6, AP_MotorsSingle, _rev_roll, AP_MOTORS_SING_POSITIVE),
+    AP_GROUPINFO("REV_ROLL", 6, AP_MotorsTiltrotor_Y6, _rev_roll, AP_MOTORS_SING_POSITIVE),
 
     // @Param: REV_PITCH
     // @DisplayName: Reverse pitch feedback 
     // @Description: Ensure the feedback is negative
     // @Values: -1:Opposite direction,1:Same direction
-    AP_GROUPINFO("REV_PITCH", 7, AP_MotorsSingle, _rev_pitch, AP_MOTORS_SING_POSITIVE),
+    AP_GROUPINFO("REV_PITCH", 7, AP_MotorsTiltrotor_Y6, _rev_pitch, AP_MOTORS_SING_POSITIVE),
 
 	// @Param: REV_YAW
     // @DisplayName: Reverse yaw feedback 
     // @Description: Ensure the feedback is negative
     // @Values: -1:Opposite direction,1:Same direction
-    AP_GROUPINFO("REV_YAW", 8, AP_MotorsSingle, _rev_yaw, AP_MOTORS_SING_POSITIVE),
+    AP_GROUPINFO("REV_YAW", 8, AP_MotorsTiltrotor_Y6, _rev_yaw, AP_MOTORS_SING_POSITIVE),
 
 	// @Param: SV_SPEED
     // @DisplayName: Servo speed 
     // @Description: Servo update speed in hz
     // @Values: 50, 125, 250
-    AP_GROUPINFO("SV_SPEED", 9, AP_MotorsSingle, _servo_speed, AP_MOTORS_SINGLE_SPEED_DIGITAL_SERVOS),
+    AP_GROUPINFO("SV_SPEED", 9, AP_MotorsTiltrotor_Y6, _servo_speed, AP_MOTORS_SINGLE_SPEED_DIGITAL_SERVOS),
 
     AP_GROUPEND
 };
 // init
-void AP_MotorsSingle::Init()
+void AP_MotorsTiltrotor_Y6::Init()
 {
     // call parent Init function to set-up throttle curve
     AP_Motors::Init();
@@ -113,7 +113,7 @@ void AP_MotorsSingle::Init()
 }
 
 // set update rate to motors - a value in hertz
-void AP_MotorsSingle::set_update_rate( uint16_t speed_hz )
+void AP_MotorsTiltrotor_Y6::set_update_rate( uint16_t speed_hz )
 {
     // record requested speed
     _speed_hz = speed_hz;
@@ -130,7 +130,7 @@ void AP_MotorsSingle::set_update_rate( uint16_t speed_hz )
 }
 
 // enable - starts allowing signals to be sent to motors
-void AP_MotorsSingle::enable()
+void AP_MotorsTiltrotor_Y6::enable()
 {
     // enable output channels
     hal.rcout->enable_ch(pgm_read_byte(&_motor_to_channel_map[AP_MOTORS_MOT_1]));
@@ -141,7 +141,7 @@ void AP_MotorsSingle::enable()
 }
 
 // output_min - sends minimum values out to the motor and trim values to the servos
-void AP_MotorsSingle::output_min()
+void AP_MotorsTiltrotor_Y6::output_min()
 {
     // send minimum value to each motor
     hal.rcout->write(pgm_read_byte(&_motor_to_channel_map[AP_MOTORS_MOT_1]), _servo1.radio_trim);
@@ -153,14 +153,14 @@ void AP_MotorsSingle::output_min()
 
 // get_motor_mask - returns a bitmask of which outputs are being used for motors or servos (1 means being used)
 //  this can be used to ensure other pwm outputs (i.e. for servos) do not conflict
-uint16_t AP_MotorsSingle::get_motor_mask()
+uint16_t AP_MotorsTiltrotor_Y6::get_motor_mask()
 {
     // single copter uses channels 1,2,3,4 and 7
     return (1U << 0 | 1U << 1 | 1U << 2 | 1U << 3 | 1U << 6);
 }
 
 // output_armed - sends commands to the motors
-void AP_MotorsSingle::output_armed()
+void AP_MotorsTiltrotor_Y6::output_armed()
 {
     int16_t out_min = _rc_throttle.radio_min + _min_throttle;
     int16_t motor_out;  // main motor output
@@ -231,7 +231,7 @@ void AP_MotorsSingle::output_armed()
 }
 
 // output_disarmed - sends commands to the motors
-void AP_MotorsSingle::output_disarmed()
+void AP_MotorsTiltrotor_Y6::output_disarmed()
 {
     // Send minimum values to all motors
     output_min();
@@ -240,7 +240,7 @@ void AP_MotorsSingle::output_disarmed()
 // output_test - spin a motor at the pwm value specified
 //  motor_seq is the motor's sequence number from 1 to the number of motors on the frame
 //  pwm value is an actual pwm value that will be output, normally in the range of 1000 ~ 2000
-void AP_MotorsSingle::output_test(uint8_t motor_seq, int16_t pwm)
+void AP_MotorsTiltrotor_Y6::output_test(uint8_t motor_seq, int16_t pwm)
 {
     // exit immediately if not armed
     if (!_flags.armed) {
