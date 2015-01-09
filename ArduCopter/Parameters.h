@@ -343,6 +343,7 @@ public:
         k_param_pid_rate_roll_aero, //249 Added for the aerodynamic surface that controls roll rate on a tiltrotor_y6
         k_param_pid_rate_yaw_mot, //250 Added for the Yaw rate Motor contribution for a Tiltrotor_Y6
 
+
         // 254,255: reserved
     };
 
@@ -494,7 +495,6 @@ public:
 
     AC_P                    p_vel_z;
     AC_PID                  pid_accel_z;
-
 
     AC_P                    p_pos_xy;
     AC_P                    p_stabilize_roll;
