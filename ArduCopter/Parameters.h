@@ -183,20 +183,21 @@ public:
         k_param_gcs2,
         k_param_serial2_baud_old, // deprecated
         k_param_serial2_protocol, // deprecated
-        k_param_serial_manager,  // 119
+        k_param_serial_manager,  //119
 
         // 120: Tiltrotor Vehicle stuff from aparmTR
-         k_param_airspeed_min = 120,
-         k_param_airspeed_max,
-         k_param_airspeed,
-         k_param_pitch_limit_max_cd,
-         k_param_pitch_limit_min_cd,
-         k_param_throttle_max,
-         k_param_throttle_min,
-         k_param_throttle_cruise, //126
-         k_param_throttle_slewrate,
-
-
+        k_param_airspeed_min = 120,
+        k_param_airspeed_max,
+        k_param_airspeed,
+        k_param_pitch_limit_max_cd,
+        k_param_pitch_limit_min_cd,
+        k_param_throttle_max,
+        k_param_throttle_min,
+        k_param_throttle_cruise, //126
+        k_param_throttle_slewrate,
+        k_param_pid_rate_pit_aero, // Added for the aerodynamic surface that controls pitch rate on a tiltrotor_y6
+        k_param_pid_rate_roll_aero,// Added for the aerodynamic surface that controls roll rate on a tiltrotor_y6
+        k_param_pid_rate_yaw_mot, //130 Added for the Yaw rate Motor contribution for a Tiltrotor_Y6
         //
         // 140: Sensor parameters
         //
@@ -327,12 +328,10 @@ public:
         k_param_acro_balance_roll,
         k_param_acro_balance_pitch,
         k_param_acro_yaw_p, // 244
-        k_param_pid_rate_roll_aero,  //246 Added for the aerodynamic surface that controls roll rate on a tiltrotor_y6
-        k_param_pid_rate_pit_aero, // 245 Added for the aerodynamic surface that controls pitch rate on a tiltrotor_y6
-        k_param_pid_rate_yaw_mot, //247 Added for the Yaw rate Motor contribution for a Tiltrotor_Y6
         k_param_autotune_axis_bitmask,  // 245
         k_param_autotune_aggressiveness,  // 246
         k_param_pi_vel_xy,  // 247
+
 
         // 254,255: reserved
     };
@@ -427,7 +426,6 @@ public:
     RC_Channel      single_servo_1, single_servo_2, single_servo_3, single_servo_4;     // servos for four flaps
     AP_Int16        roll_limit_cd;
     AP_Int32        airspeed_cruise_cm;
-
 #endif
 
     // RC channels
@@ -481,7 +479,6 @@ public:
 
     AC_P                    p_vel_z;
     AC_PID                  pid_accel_z;
-
 
     AC_P                    p_pos_xy;
     AC_P                    p_stabilize_roll;
@@ -560,7 +557,6 @@ public:
 
         p_vel_z                 (VEL_Z_P),
         pid_accel_z             (ACCEL_Z_P,       ACCEL_Z_I,        ACCEL_Z_D,      ACCEL_Z_IMAX,       ACCEL_Z_FILT_HZ,    MAIN_LOOP_SECONDS),
-
 
 
         // P controller	        initial P
