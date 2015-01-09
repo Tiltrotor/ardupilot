@@ -23,7 +23,6 @@
 #include <AP_HAL.h>
 #include <AP_Math.h>
 #include "AP_MotorsTiltrotor_Y6.h"
-
 extern const AP_HAL::HAL& hal;
 
 
@@ -36,7 +35,6 @@ const AP_Param::GroupInfo AP_MotorsTiltrotor_Y6::var_info[] PROGMEM = {
     // @User: Advanced
     // @Values: 0:Disabled,1:Enable
     AP_GROUPINFO("TCRV_ENABLE", 1, AP_MotorsTiltrotor_Y6, _throttle_curve_enabled, THROTTLE_CURVE_ENABLED),
-
     // @Param: TCRV_MIDPCT
     // @DisplayName: Thrust Curve mid-point percentage
     // @Description: Set the pwm position that produces half the maximum thrust of the motors
@@ -44,7 +42,6 @@ const AP_Param::GroupInfo AP_MotorsTiltrotor_Y6::var_info[] PROGMEM = {
     // @Range: 20 80
     // @Increment: 1
     AP_GROUPINFO("TCRV_MIDPCT", 2, AP_MotorsTiltrotor_Y6, _throttle_curve_mid, THROTTLE_CURVE_MID_THRUST),
-
     // @Param: TCRV_MAXPCT
     // @DisplayName: Thrust Curve max thrust percentage
     // @Description: Set to the lowest pwm position that produces the maximum thrust of the motors.  Most motors produce maximum thrust below the maximum pwm value that they accept.
@@ -52,14 +49,12 @@ const AP_Param::GroupInfo AP_MotorsTiltrotor_Y6::var_info[] PROGMEM = {
     // @Range: 20 80
     // @Increment: 1
     AP_GROUPINFO("TCRV_MAXPCT", 3, AP_MotorsTiltrotor_Y6, _throttle_curve_max, THROTTLE_CURVE_MAX_THRUST),
-
     // @Param: SPIN_ARMED
     // @DisplayName: Motors always spin when armed
     // @Description: Controls whether motors always spin when armed (must be below THR_MIN)
     // @Values: 0:Do Not Spin,70:VerySlow,100:Slow,130:Medium,150:Fast
     // @User: Standard
     AP_GROUPINFO("SPIN_ARMED", 5, AP_MotorsTiltrotor_Y6, _spin_when_armed, AP_MOTORS_SPIN_WHEN_ARMED),
-
     // @Param: REV_ROLL
     // @DisplayName: Reverse roll feedback 
     // @Description: Ensure the feedback is negative
@@ -71,23 +66,21 @@ const AP_Param::GroupInfo AP_MotorsTiltrotor_Y6::var_info[] PROGMEM = {
     // @Description: Ensure the feedback is negative
     // @Values: -1:Opposite direction,1:Same direction
     AP_GROUPINFO("REV_PITCH", 7, AP_MotorsTiltrotor_Y6, _rev_pitch, AP_MOTORS_SING_POSITIVE),
-
 	// @Param: REV_YAW
     // @DisplayName: Reverse yaw feedback 
     // @Description: Ensure the feedback is negative
     // @Values: -1:Opposite direction,1:Same direction
     AP_GROUPINFO("REV_YAW", 8, AP_MotorsTiltrotor_Y6, _rev_yaw, AP_MOTORS_SING_POSITIVE),
-
 	// @Param: SV_SPEED
     // @DisplayName: Servo speed 
     // @Description: Servo update speed in hz
     // @Values: 50, 125, 250
     AP_GROUPINFO("SV_SPEED", 9, AP_MotorsTiltrotor_Y6, _servo_speed, AP_MOTORS_SINGLE_SPEED_DIGITAL_SERVOS),
-
     AP_GROUPEND
 };
 // init
 void AP_MotorsTiltrotor_Y6::Init()
+
 {
     // call parent Init function to set-up throttle curve
     AP_Motors::Init();
