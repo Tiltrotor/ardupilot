@@ -135,6 +135,8 @@
  # define FRAME_CONFIG_STRING "SINGLE"
 #elif FRAME_CONFIG == COAX_FRAME
  # define FRAME_CONFIG_STRING "COAX"
+#elif FRAME_CONFIG == TILTROTOR_Y6_FRAME
+ # define FRAME_CONFIG_STRING "TILTROTOR_Y6"
 #else
  # define FRAME_CONFIG_STRING "UNKNOWN"
 #endif
@@ -162,6 +164,19 @@
   # define RATE_PITCH_D                 0.006f
   # define RATE_YAW_P                   0.150f
   # define RATE_YAW_I                   0.015f
+#endif
+
+/////////////////////////////////////////////////////////////////////////////////
+// TILTROTOR_Y6 defaults
+#if FRAME_CONFIG == TILTOROTOR_Y6_FRAME
+  # define RATE_ROLL_P                  0.1f
+  # define RATE_ROLL_D                  0.006f
+  # define RATE_PITCH_P                 0.1f
+  # define RATE_PITCH_D                 0.006f
+  # define RATE_YAW_P                   0.150f
+  # define RATE_YAW_I                   0.015f
+  # define AUTOTUNE_ENABLED                     DISABLED
+  # define WP_YAW_BEHAVIOR_DEFAULT              WP_YAW_BEHAVIOR_LOOK_AHEAD
 #endif
 
 //////////////////////////////////////////////////////////////////////////////
