@@ -346,7 +346,7 @@ static void report_frame()
  #elif FRAME_CONFIG == HELI_FRAME
     cliSerial->printf_P(PSTR("Heli frame\n"));
  #elif FRAME_CONFIG == TILTROTOR_Y6_FRAME
-    cliSerial->printf_P(PSTR("Heli frame\n"));
+    cliSerial->printf_P(PSTR("Tiltrotor_Y6 frame\n"));
  #endif
 
     print_blanks(2);
