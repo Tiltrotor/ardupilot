@@ -413,6 +413,11 @@ public:
     RC_Channel      single_servo_1, single_servo_2; // servos for two flaps
 #endif
 
+#if FRAME_CONFIG ==     TILTROTOR_Y6_FRAME
+    // Tiltrotor Y6
+    RC_Channel      single_servo_1, single_servo_2, single_servo_3, single_servo_4;     // servos for four flaps
+#endif
+
     // RC channels
     RC_Channel              rc_1;
     RC_Channel              rc_2;
@@ -487,6 +492,13 @@ public:
 #if FRAME_CONFIG ==     COAX_FRAME
         single_servo_1        (CH_1),
         single_servo_2        (CH_2),
+#endif
+
+#if FRAME_CONFIG ==     TILTROTOR_Y6_FRAME
+        single_servo_1        (CH_1),
+        single_servo_2        (CH_2),
+        single_servo_3        (CH_3),
+        single_servo_4        (CH_4),
 #endif
 
         rc_1                (CH_1),
