@@ -175,8 +175,20 @@
   # define RATE_PITCH_D                 0.006f
   # define RATE_YAW_P                   0.150f
   # define RATE_YAW_I                   0.015f
-  # define AUTOTUNE_ENABLED                     DISABLED
-  # define WP_YAW_BEHAVIOR_DEFAULT              WP_YAW_BEHAVIOR_LOOK_AHEAD
+  # define RATE_PIT_P_AERO				0.1f
+  # define RATE_PIT_I_AERO              0.100f
+  # define RATE_PIT_D_AERO				0.004f
+  # define RATE_PIT_IMAX_A              1000
+  # define RATE_ROL_P_AERO				0.1f
+  # define RATE_ROL_I_AERO              0.100f
+  # define RATE_ROL_D_AERO				0.004f
+  # define RATE_ROL_IMAX_A              1000
+  # define RATE_YAW_P_MOT				0.2f
+  # define RATE_YAW_I_MOT               0.020f
+  # define RATE_YAW_D_MOT				0.000f
+  # define RATE_YAW_IMAX_M              1000
+  # define AUTOTUNE_ENABLED             DISABLED
+  # define WP_YAW_BEHAVIOR_DEFAULT      WP_YAW_BEHAVIOR_LOOK_AHEAD
 #endif
 
 //////////////////////////////////////////////////////////////////////////////
