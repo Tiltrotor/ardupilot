@@ -311,7 +311,9 @@ public:
         k_param_acro_balance_roll,
         k_param_acro_balance_pitch,
         k_param_acro_yaw_p, // 244
-
+        k_param_pid_rate_pit_aero,    //Elevon Pitch Rate PID for tiltrotor_Y6
+        k_param_pid_rate_roll_aero,   //Elevon Roll Rate PID for tiltrotor_Y6
+        k_param_pid_rate_yaw_mot, // Aft Motor(s) Yaw Rate PID for tiltrotor_Y6
         // 254,255: reserved
     };
 
@@ -458,6 +460,13 @@ public:
     AC_PID                  pid_rate_pitch;
     AC_PID                  pid_rate_yaw;
 #endif
+
+#if FRAME_CONFIG ==     TILTROTOR_Y6_FRAME        // Pitch and Roll P for the aerodynamic surfaces of a TILTROTOR_Y6_FRAME
+    AC_PID          		pid_rate_pit_aero;
+    AC_PID          		pid_rate_roll_aero;
+    AC_PID					pid_rate_yaw_mot;
+#endif
+
     AC_PID                  pid_loiter_rate_lat;
     AC_PID                  pid_loiter_rate_lon;
 
@@ -525,6 +534,12 @@ public:
         pid_rate_roll           (RATE_ROLL_P,           RATE_ROLL_I,            RATE_ROLL_D,            RATE_ROLL_IMAX),
         pid_rate_pitch          (RATE_PITCH_P,          RATE_PITCH_I,           RATE_PITCH_D,           RATE_PITCH_IMAX),
         pid_rate_yaw            (RATE_YAW_P,            RATE_YAW_I,             RATE_YAW_D,             RATE_YAW_IMAX),
+
+#if FRAME_CONFIG == TILTROTOR_Y6_FRAME
+        pid_rate_pit_aero     	(RATE_PIT_P_AERO,       RATE_PIT_I_AERO,        RATE_PIT_D_AERO,       RATE_PIT_IMAX_A),
+        pid_rate_roll_aero     	(RATE_ROL_P_AERO,       RATE_ROL_I_AERO,        RATE_ROL_D_AERO,       RATE_ROL_IMAX_A),
+        pid_rate_yaw_mot     	(RATE_YAW_P_MOT,        RATE_YAW_I_MOT,         RATE_YAW_D_MOT,        RATE_YAW_IMAX_M),
+#endif
 
         pid_loiter_rate_lat     (LOITER_RATE_P,         LOITER_RATE_I,          LOITER_RATE_D,          LOITER_RATE_IMAX),
         pid_loiter_rate_lon     (LOITER_RATE_P,         LOITER_RATE_I,          LOITER_RATE_D,          LOITER_RATE_IMAX),
