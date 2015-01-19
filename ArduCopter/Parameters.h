@@ -240,12 +240,12 @@ public:
         k_param_rc_8,
         k_param_rc_10,
         k_param_rc_11,
-        k_param_throttle_min,
-        k_param_throttle_max,
+        k_param_throttle_min_copter, //renamed for conflict with tiltrotor airspeed library
+        k_param_throttle_max_copter, //renamed for conflict with tiltrotor airspeed library
         k_param_failsafe_throttle,
         k_param_throttle_fs_action,     // remove
         k_param_failsafe_throttle_value,
-        k_param_throttle_cruise,
+        k_param_throttle_cruise_copter,  //renamed for conflict with tiltrotor airspeed library
         k_param_esc_calibrate,
         k_param_radio_tuning,
         k_param_radio_tuning_high,
@@ -365,11 +365,11 @@ public:
 
     // Throttle
     //
-    AP_Int16        throttle_min;
-    AP_Int16        throttle_max;
+    AP_Int16        throttle_min_copter;
+    AP_Int16        throttle_max_copter;
     AP_Int8         failsafe_throttle;
     AP_Int16        failsafe_throttle_value;
-    AP_Int16        throttle_cruise;
+    AP_Int16        throttle_cruise_copter;
     AP_Int16        throttle_mid;
     AP_Int16        throttle_deadzone;
 
