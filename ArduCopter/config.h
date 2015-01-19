@@ -168,22 +168,22 @@
 
 /////////////////////////////////////////////////////////////////////////////////
 // TILTROTOR_Y6 defaults
-#if FRAME_CONFIG == TILTOROTOR_Y6_FRAME
+#if FRAME_CONFIG == TILTROTOR_Y6_FRAME
   # define RATE_ROLL_P                  0.1f
   # define RATE_ROLL_D                  0.006f
   # define RATE_PITCH_P                 0.1f
   # define RATE_PITCH_D                 0.006f
   # define RATE_YAW_P                   0.150f
   # define RATE_YAW_I                   0.015f
-  # define RATE_PIT_P_AERO				0.1f
+  # define RATE_PIT_P_AERO				0.150f
   # define RATE_PIT_I_AERO              0.100f
   # define RATE_PIT_D_AERO				0.004f
   # define RATE_PIT_IMAX_A              1000
-  # define RATE_ROL_P_AERO				0.1f
+  # define RATE_ROL_P_AERO				0.150f
   # define RATE_ROL_I_AERO              0.100f
   # define RATE_ROL_D_AERO				0.004f
   # define RATE_ROL_IMAX_A              1000
-  # define RATE_YAW_P_MOT				0.2f
+  # define RATE_YAW_P_MOT				0.200f
   # define RATE_YAW_I_MOT               0.020f
   # define RATE_YAW_D_MOT				0.000f
   # define RATE_YAW_IMAX_M              1000
