@@ -83,7 +83,7 @@ static void update_thr_cruise()
 {
     // ensure throttle_avg has been initialised
     if( throttle_avg == 0 ) {
-        throttle_avg = g.throttle_cruise;
+        throttle_avg = g.throttle_cruise_copter;
         // update position controller
         pos_control.set_throttle_hover(throttle_avg);
     }
@@ -99,7 +99,7 @@ static void update_thr_cruise()
     // calc average throttle if we are in a level hover
     if (throttle > g.throttle_min_copter && abs(climb_rate) < 60 && labs(ahrs.roll_sensor) < 500 && labs(ahrs.pitch_sensor) < 500) {
         throttle_avg = throttle_avg * 0.99f + (float)throttle * 0.01f;
-        g.throttle_cruise = throttle_avg;
+        g.throttle_cruise_copter = throttle_avg;
         // update position controller
         pos_control.set_throttle_hover(throttle_avg);
     }
@@ -264,5 +264,5 @@ static float get_throttle_surface_tracking(int16_t target_rate, float current_al
 static void set_accel_throttle_I_from_pilot_throttle(int16_t pilot_throttle)
 {
     // shift difference between pilot's throttle and hover throttle into accelerometer I
-    g.pid_throttle_accel.set_integrator(pilot_throttle-g.throttle_cruise);
+    g.pid_throttle_accel.set_integrator(pilot_throttle-g.throttle_cruise_copter);
 }
