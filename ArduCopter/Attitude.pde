@@ -105,7 +105,7 @@ static void update_thr_average()
 
     // calc average throttle if we are in a level hover
 
-    if (throttle > g.throttle_min && abs(climb_rate) < 60 && labs(ahrs.roll_sensor) < 500 && labs(ahrs.pitch_sensor) < 500) {
+    if (throttle > g.throttle_min_copter && abs(climb_rate) < 60 && labs(ahrs.roll_sensor) < 500 && labs(ahrs.pitch_sensor) < 500) {
         throttle_average = throttle_average * 0.99f + (float)throttle * 0.01f;
 
         // update position controller
