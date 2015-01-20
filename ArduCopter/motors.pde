@@ -186,7 +186,7 @@ static bool init_arm_motors()
 
     // Cancel arming if throttle is raised too high so that copter does not suddenly take off
     read_radio();
-    if (g.rc_3.control_in > g.throttle_cruise && g.throttle_cruise > 100) {
+    if (g.rc_3.control_in > g.throttle_cruise_copter && g.throttle_cruise_copter > 100) {
         motors.output_min();
         failsafe_enable();
         AP_Notify::flags.armed = false;
@@ -672,7 +672,7 @@ static void init_disarm_motors()
         compass.save_offsets();
     }
 
-    g.throttle_cruise.save();
+    g.throttle_cruise_copter.save();
 
 #if AUTOTUNE_ENABLED == ENABLED
     // save auto tuned parameters
