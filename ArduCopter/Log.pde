@@ -393,6 +393,7 @@ static void Log_Write_Attitude()
 #endif
 }
 
+
 struct PACKED log_Rate {
    LOG_PACKET_HEADER;
    uint32_t time_ms;
@@ -406,6 +407,7 @@ struct PACKED log_Rate {
    float yaw;
    float yaw_out;
 };
+
 
 // Write an rate packet
 static void Log_Write_Rate()
