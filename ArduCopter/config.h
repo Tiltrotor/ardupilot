@@ -733,19 +733,19 @@
 //////////////////////////////////////////////////////////////////////////////
 // Throttle control gains
 //
-#ifndef THROTTLE_CRUISE
- # define THROTTLE_CRUISE       450             // default estimate of throttle required for vehicle to maintain a hover
+#ifndef THROTTLE_CRUISE_C
+ # define THROTTLE_CRUISE_C     450             // default estimate of throttle required for vehicle to maintain a hover
 #endif
 
 #ifndef THR_MID_DEFAULT
  # define THR_MID_DEFAULT       500             // Throttle output (0 ~ 1000) when throttle stick is in mid position
 #endif
 
-#ifndef THR_MIN_DEFAULT
- # define THR_MIN_DEFAULT       130             // minimum throttle sent to the motors when armed and pilot throttle above zero
+#ifndef THR_MIN_CPTR_DEFAULT
+ # define THR_MIN_CPTR_DEFAULT       130             // minimum throttle sent to the motors when armed and pilot throttle above zero
 #endif
-#ifndef THR_MAX_DEFAULT
- # define THR_MAX_DEFAULT       1000            // maximum throttle sent to the motors
+#ifndef THR_MAX_CPTR_DEFAULT
+ # define THR_MAX_CPTR_DEFAULT       1000            // maximum throttle sent to the motors
 #endif
 
 #ifndef THR_DZ_DEFAULT
