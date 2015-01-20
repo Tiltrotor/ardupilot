@@ -384,7 +384,7 @@ static void Log_Write_Attitude()
 struct PACKED log_Mode {
     LOG_PACKET_HEADER;
     uint8_t mode;
-    int16_t throttle_cruise;
+    int16_t throttle_cruise_copter;
 };
 
 // Write a mode packet
@@ -393,7 +393,7 @@ static void Log_Write_Mode(uint8_t mode)
     struct log_Mode pkt = {
         LOG_PACKET_HEADER_INIT(LOG_MODE_MSG),
         mode            : mode,
-        throttle_cruise : g.throttle_cruise,
+        throttle_cruise_copter : g.throttle_cruise_copter,
     };
     DataFlash.WriteBlock(&pkt, sizeof(pkt));
 }
