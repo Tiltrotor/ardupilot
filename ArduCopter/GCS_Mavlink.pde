@@ -376,9 +376,16 @@ static void NOINLINE send_radio_out(mavlink_channel_t chan)
 
 static void NOINLINE send_vfr_hud(mavlink_channel_t chan)
 {
+    
+    float aspeed;
+    if (airspeed.enabled()) {
+        aspeed = airspeed.get_airspeed();
+    } else if (!ahrs.airspeed_estimate(&aspeed)) {
+        aspeed = 0;
+    }
     mavlink_msg_vfr_hud_send(
         chan,
-        gps.ground_speed(),
+        aspeed,
         gps.ground_speed(),
         (ahrs.yaw_sensor / 100) % 360,
         g.rc_3.servo_out/10,
