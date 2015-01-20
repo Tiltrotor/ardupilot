@@ -139,21 +139,35 @@ static void update_optical_flow(void)
 }
 #endif  // OPTFLOW == ENABLED
 
+
 #if FRAME_CONFIG == TILTROTOR_Y6_FRAME
+/*
+  ask airspeed sensor for a new value
+ */
 static void read_airspeed(void)
 {
-   if (airspeed.enabled()) {
-      airspeed.read();
+    if (airspeed.enabled()) {
+        airspeed.read();
+
+        // supply a new temperature to the barometer from the digital
+        // airspeed sensor if we can
+        float temperature;
+        if (airspeed.get_temperature(temperature)) {
+            barometer.set_external_temperature(temperature);
+        }
     }
 }
 
-static void zero_airspeed(void)
+
+static void zero_airspeed(bool in_startup)
 {
-    airspeed.calibrate();
+    airspeed.calibrate(in_startup);
+    read_airspeed();
+    // update barometric calibration with new airspeed supplied temperature
+    barometer.update_calibration();
     gcs_send_text_P(SEVERITY_LOW,PSTR("zero airspeed calibrated"));
 }
 #endif
-
 
 // read_battery - check battery voltage and current and invoke failsafe if necessary
 // called at 10hz
