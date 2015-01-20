@@ -139,6 +139,22 @@ static void update_optical_flow(void)
 }
 #endif  // OPTFLOW == ENABLED
 
+#if FRAME_CONFIG == TILTROTOR_Y6_FRAME
+static void read_airspeed(void)
+{
+   if (airspeed.enabled()) {
+      airspeed.read();
+    }
+}
+
+static void zero_airspeed(void)
+{
+    airspeed.calibrate();
+    gcs_send_text_P(SEVERITY_LOW,PSTR("zero airspeed calibrated"));
+}
+#endif
+
+
 // read_battery - check battery voltage and current and invoke failsafe if necessary
 // called at 10hz
 static void read_battery(void)
