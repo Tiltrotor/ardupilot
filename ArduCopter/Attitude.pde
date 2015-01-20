@@ -97,7 +97,7 @@ static void update_thr_cruise()
     int16_t throttle = g.rc_3.servo_out;
 
     // calc average throttle if we are in a level hover
-    if (throttle > g.throttle_min && abs(climb_rate) < 60 && labs(ahrs.roll_sensor) < 500 && labs(ahrs.pitch_sensor) < 500) {
+    if (throttle > g.throttle_min_copter && abs(climb_rate) < 60 && labs(ahrs.roll_sensor) < 500 && labs(ahrs.pitch_sensor) < 500) {
         throttle_avg = throttle_avg * 0.99f + (float)throttle * 0.01f;
         g.throttle_cruise = throttle_avg;
         // update position controller
@@ -136,7 +136,7 @@ static int16_t get_pilot_desired_throttle(int16_t throttle_control)
     // check throttle is above, below or in the deadband
     if (throttle_control < THROTTLE_IN_MIDDLE) {
         // below the deadband
-        throttle_out = g.throttle_min + ((float)(throttle_control-g.throttle_min))*((float)(g.throttle_mid - g.throttle_min))/((float)(500-g.throttle_min));
+        throttle_out = g.throttle_min_copter + ((float)(throttle_control-g.throttle_min_copter))*((float)(g.throttle_mid - g.throttle_min_copter))/((float)(500-g.throttle_min_copter));
     }else if(throttle_control > THROTTLE_IN_MIDDLE) {
         // above the deadband
         throttle_out = g.throttle_mid + ((float)(throttle_control-500))*(float)(1000-g.throttle_mid)/500.0f;
@@ -210,14 +210,14 @@ static int16_t get_throttle_pre_takeoff(int16_t throttle_control)
     // sanity check throttle_mid
     g.throttle_mid = constrain_int16(g.throttle_mid,300,700);
 
-    // sanity check throttle_min vs throttle_mid
-    if (g.throttle_min > get_non_takeoff_throttle()) {
-        return g.throttle_min;
+    // sanity check throttle_min_copter vs throttle_mid
+    if (g.throttle_min_copter > get_non_takeoff_throttle()) {
+        return g.throttle_min_copter;
     }
 
     // check throttle is below top of deadband
     if (throttle_control < THROTTLE_IN_DEADBAND_TOP) {
-        throttle_out = g.throttle_min + ((float)(throttle_control-g.throttle_min))*((float)(get_non_takeoff_throttle() - g.throttle_min))/((float)(THROTTLE_IN_DEADBAND_TOP-g.throttle_min));
+        throttle_out = g.throttle_min_copter + ((float)(throttle_control-g.throttle_min_copter))*((float)(get_non_takeoff_throttle() - g.throttle_min_copter))/((float)(THROTTLE_IN_DEADBAND_TOP-g.throttle_min_copter));
     }else{
         // must be in the deadband
         throttle_out = get_non_takeoff_throttle();
