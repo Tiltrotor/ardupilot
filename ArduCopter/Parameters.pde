@@ -209,23 +209,23 @@ const AP_Param::Info var_info[] PROGMEM = {
     // @User: Standard
     GSCALAR(pilot_accel_z,  "PILOT_ACCEL_Z",    PILOT_ACCEL_Z_DEFAULT),
 
-    // @Param: THR_MIN
+    // @Param: THR_MIN_CPTR
     // @DisplayName: Throttle Minimum
     // @Description: The minimum throttle that will be sent to the motors to keep them spinning
     // @Units: Percent*10
     // @Range: 0 300
     // @Increment: 1
     // @User: Standard
-    GSCALAR(throttle_min,   "THR_MIN",          THR_MIN_DEFAULT),
+    GSCALAR(throttle_min_copter,   "THR_MIN_CPTR",          THR_MIN_CPTR_DEFAULT),
 
-    // @Param: THR_MAX
+    // @Param: THR_MAX_CPTR
     // @DisplayName: Throttle Maximum
     // @Description: The maximum throttle that will be sent to the motors.  This should normally be left as 1000.
     // @Units: Percent*10
     // @Range: 800 1000
     // @Increment: 1
     // @User: Advanced
-    GSCALAR(throttle_max,   "THR_MAX",          THR_MAX_DEFAULT),
+    GSCALAR(throttle_max_copter,   "THR_MAX_CPTR",          THR_MAX_CPTR_DEFAULT),
 
     // @Param: FS_THR_ENABLE
     // @DisplayName: Throttle Failsafe Enable
@@ -243,13 +243,13 @@ const AP_Param::Info var_info[] PROGMEM = {
     // @User: Standard
     GSCALAR(failsafe_throttle_value, "FS_THR_VALUE",      FS_THR_VALUE_DEFAULT),
 
-    // @Param: TRIM_THROTTLE
+    // @Param: TRIM_THROTTLE_C
     // @DisplayName: Throttle Trim
     // @Description: The autopilot's estimate of the throttle required to maintain a level hover.  Calculated automatically from the pilot's throttle input while in stabilize mode
     // @Range: 0 1000
     // @Units: Percent*10
     // @User: Advanced
-    GSCALAR(throttle_cruise,        "TRIM_THROTTLE",    THROTTLE_CRUISE),
+    GSCALAR(throttle_cruise_cruise,        "TRIM_THROTTLE_C",    THROTTLE_CRUISE_C),
 
     // @Param: THR_MID
     // @DisplayName: Throttle Mid Position
