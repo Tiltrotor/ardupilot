@@ -692,8 +692,8 @@
  # define THROTTLE_CRUISE_C       450             // default estimate of throttle required for vehicle to maintain a hover
 #endif
 
-#ifndef THR_MID_CPTR_DEFAULT
- # define THR_MID_CPTR_DEFAULT       500             // Throttle output (0 ~ 1000) when throttle stick is in mid position
+#ifndef THR_MID_DEFAULT
+ # define THR_MID_DEFAULT       500             // Throttle output (0 ~ 1000) when throttle stick is in mid position
 #endif
 
 #ifndef THR_MIN_CPTR_DEFAULT
