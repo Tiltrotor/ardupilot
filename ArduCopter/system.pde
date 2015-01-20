@@ -322,7 +322,7 @@ static void startup_ground(bool force_gyro_cal)
     if (airspeed.enabled()) {
         // initialize airspeed sensor
         // --------------------------
-        zero_airspeed();
+        zero_airspeed(true);
     } else {
         gcs_send_text_P(SEVERITY_LOW,PSTR("NO airspeed"));
     }
