@@ -443,6 +443,7 @@ static void Log_Write_Mot()
     DataFlash.WriteBlock(&pkt_mot, sizeof(pkt_mot));
 }
 
+
 struct PACKED log_Startup {
 LOG_PACKET_HEADER;
 };
