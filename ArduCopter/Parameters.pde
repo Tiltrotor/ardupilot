@@ -249,7 +249,7 @@ const AP_Param::Info var_info[] PROGMEM = {
     // @Range: 0 1000
     // @Units: Percent*10
     // @User: Advanced
-    GSCALAR(throttle_cruise_cruise,        "TRIM_THROTTLE_C",    THROTTLE_CRUISE_C),
+    GSCALAR(throttle_cruise_copter,        "TRIM_THROTTLE_C",    THROTTLE_CRUISE_C),
 
     // @Param: THR_MID
     // @DisplayName: Throttle Mid Position
