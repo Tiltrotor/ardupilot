@@ -696,7 +696,7 @@ static void init_disarm_motors()
         compass.save_offsets();
     }
 
-    g.throttle_cruise.save();
+    g.throttle_cruise_copter.save();
 
 #if AUTOTUNE_ENABLED == ENABLED
     // save auto tuned parameters
