@@ -181,6 +181,16 @@ public:
         k_param_serial2_baud_old, // deprecated
         k_param_serial2_protocol,
 
+        // 120: Tiltrotor Vehicle stuff from aparmTR
+         k_param_airspeed_min = 120,
+         k_param_airspeed_max,
+         k_param_pitch_limit_max_cd,
+         k_param_pitch_limit_min_cd,
+         k_param_throttle_max,
+         k_param_throttle_min,
+         k_param_throttle_cruise, //126
+         k_param_throttle_slewrate,
+
         //
         // 140: Sensor parameters
         //
@@ -418,6 +428,8 @@ public:
 #if FRAME_CONFIG ==     TILTROTOR_Y6_FRAME
     // Tiltrotor Y6
     RC_Channel      single_servo_1, single_servo_2, single_servo_3, single_servo_4;     // servos for four flaps
+    AP_Int16        roll_limit_cd;
+    AP_Int32        airspeed_cruise_cm;
 #endif
 
     // RC channels
