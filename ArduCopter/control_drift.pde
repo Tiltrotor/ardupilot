@@ -88,7 +88,7 @@ static void drift_run()
     //      Only active when pilot's throttle is between 213 ~ 787
     //      Assistance is strongest when throttle is at mid, drops linearly to no assistance at 213 and 787
     float thr_assist = 0.0f;
-    if (pilot_throttle_scaled > g.throttle_min && pilot_throttle_scaled < g.throttle_max_copter &&
+    if (pilot_throttle_scaled > g.throttle_min_copter && pilot_throttle_scaled < g.throttle_max_copter &&
         pilot_throttle_scaled > DRIFT_THR_MIN && pilot_throttle_scaled < DRIFT_THR_MAX) {
         // calculate throttle assist gain
         thr_assist = 1.2 - ((float)abs(pilot_throttle_scaled - 500) / 240.0f);
@@ -97,8 +97,8 @@ static void drift_run()
         // ensure throttle assist never adjusts the throttle by more than 300 pwm
         thr_assist = constrain_float(thr_assist, -DRIFT_THR_ASSIST_MAX, DRIFT_THR_ASSIST_MAX);
 
-        // ensure throttle assist never pushes throttle below throttle_min or above throttle_max_copter
-        thr_assist = constrain_float(thr_assist, g.throttle_min - pilot_throttle_scaled, g.throttle_max_copter - pilot_throttle_scaled);
+        // ensure throttle assist never pushes throttle below throttle_min_copter or above throttle_max_copter
+        thr_assist = constrain_float(thr_assist, g.throttle_min_copter - pilot_throttle_scaled, g.throttle_max_copter - pilot_throttle_scaled);
     }
 
     // call attitude controller
