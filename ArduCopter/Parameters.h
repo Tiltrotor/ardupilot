@@ -184,6 +184,7 @@ public:
         // 120: Tiltrotor Vehicle stuff from aparmTR
          k_param_airspeed_min = 120,
          k_param_airspeed_max,
+         k_param_airspeed,
          k_param_pitch_limit_max_cd,
          k_param_pitch_limit_min_cd,
          k_param_throttle_max,
