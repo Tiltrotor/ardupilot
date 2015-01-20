@@ -88,7 +88,7 @@ static void update_thr_cruise()
 {
     // ensure throttle_avg has been initialised
     if( throttle_avg == 0 ) {
-        throttle_avg = g.throttle_cruise;
+        throttle_avg = g.throttle_cruise_copter;
         // update position controller
         pos_control.set_throttle_hover(throttle_avg);
     }
@@ -102,9 +102,9 @@ static void update_thr_cruise()
     int16_t throttle = g.rc_3.servo_out;
 
     // calc average throttle if we are in a level hover
-    if (throttle > g.throttle_min && abs(climb_rate) < 60 && labs(ahrs.roll_sensor) < 500 && labs(ahrs.pitch_sensor) < 500) {
+    if (throttle > g.throttle_min_copter && abs(climb_rate) < 60 && labs(ahrs.roll_sensor) < 500 && labs(ahrs.pitch_sensor) < 500) {
         throttle_avg = throttle_avg * 0.99f + (float)throttle * 0.01f;
-        g.throttle_cruise = throttle_avg;
+        g.throttle_cruise_copter = throttle_avg;
         // update position controller
         pos_control.set_throttle_hover(throttle_avg);
     }
@@ -137,7 +137,7 @@ static int16_t get_pilot_desired_throttle(int16_t throttle_control)
     // check throttle is above, below or in the deadband
     if (throttle_control < mid_stick) {
         // below the deadband
-        throttle_out = g.throttle_min + ((float)(throttle_control-g.throttle_min))*((float)(g.throttle_mid - g.throttle_min))/((float)(mid_stick-g.throttle_min));
+        throttle_out = g.throttle_min_copter + ((float)(throttle_control-g.throttle_min_copter))*((float)(g.throttle_mid - g.throttle_min_copter))/((float)(mid_stick-g.throttle_min_copter));
     }else if(throttle_control > mid_stick) {
         // above the deadband
         throttle_out = g.throttle_mid + ((float)(throttle_control-mid_stick)) * (float)(1000-g.throttle_mid) / (float)(1000-mid_stick);
@@ -166,7 +166,7 @@ static int16_t get_pilot_desired_climb_rate(int16_t throttle_control)
     int16_t deadband_bottom = mid_stick - g.throttle_deadzone;
 
     // ensure a reasonable throttle value
-    throttle_control = constrain_int16(throttle_control,g.throttle_min,1000);
+    throttle_control = constrain_int16(throttle_control,g.throttle_min_copter,1000);
 
     // ensure a reasonable deadzone
     g.throttle_deadzone = constrain_int16(g.throttle_deadzone, 0, 400);
@@ -174,7 +174,7 @@ static int16_t get_pilot_desired_climb_rate(int16_t throttle_control)
     // check throttle is above, below or in the deadband
     if (throttle_control < deadband_bottom) {
         // below the deadband
-        desired_rate = (int32_t)g.pilot_velocity_z_max * (throttle_control-deadband_bottom) / (deadband_bottom-g.throttle_min);
+        desired_rate = (int32_t)g.pilot_velocity_z_max * (throttle_control-deadband_bottom) / (deadband_bottom-g.throttle_min_copter);
     }else if (throttle_control > deadband_top) {
         // above the deadband
         desired_rate = (int32_t)g.pilot_velocity_z_max * (throttle_control-deadband_top) / (1000-deadband_top);
@@ -217,14 +217,14 @@ static int16_t get_throttle_pre_takeoff(int16_t throttle_control)
     // sanity check throttle_mid
     g.throttle_mid = constrain_int16(g.throttle_mid,300,700);
 
-    // sanity check throttle_min vs throttle_mid
-    if (g.throttle_min > get_non_takeoff_throttle()) {
-        return g.throttle_min;
+    // sanity check throttle_min_copter vs throttle_mid
+    if (g.throttle_min_copter > get_non_takeoff_throttle()) {
+        return g.throttle_min_copter;
     }
 
     // check throttle is below top of deadband
     if (throttle_control < deadband_top) {
-        throttle_out = g.throttle_min + ((float)(throttle_control-g.throttle_min))*((float)(get_non_takeoff_throttle() - g.throttle_min))/((float)(deadband_top-g.throttle_min));
+        throttle_out = g.throttle_min_copter + ((float)(throttle_control-g.throttle_min_copter))*((float)(get_non_takeoff_throttle() - g.throttle_min_copter))/((float)(deadband_top-g.throttle_min_copter));
     }else{
         // must be in the deadband
         throttle_out = get_non_takeoff_throttle();
@@ -272,5 +272,5 @@ static float get_throttle_surface_tracking(int16_t target_rate, float current_al
 static void set_accel_throttle_I_from_pilot_throttle(int16_t pilot_throttle)
 {
     // shift difference between pilot's throttle and hover throttle into accelerometer I
-    g.pid_throttle_accel.set_integrator(pilot_throttle-g.throttle_cruise);
+    g.pid_throttle_accel.set_integrator(pilot_throttle-g.throttle_cruise_copter);
 }
