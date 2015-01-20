@@ -150,6 +150,11 @@ static void init_ardupilot()
 
     barometer.init();
 
+    // if you are a tiltrotor initialise airspeed sensor
+#if FRAME_CONFIG == TILTROTOR_Y6_FRAME
+    airspeed.init();
+#endif
+
     // init the GCS
     gcs[0].init(hal.uartA);
 
@@ -331,6 +336,15 @@ static void startup_ground(bool force_gyro_cal)
     // set landed flag
     set_land_complete(true);
     set_land_complete_maybe(true);
+   
+    if (airspeed.enabled()) {
+        // initialize airspeed sensor
+        // --------------------------
+        zero_airspeed();
+    } else {
+        gcs_send_text_P(SEVERITY_LOW,PSTR("NO airspeed"));
+    }
+
 }
 
 // returns true if the GPS is ok and home position is set
