@@ -432,6 +432,7 @@ static void Log_Write_Rate()
 // Write an rate packet
 static void Log_Write_Mot()
 {
+
     struct log_Mot pkt_mot = {
         LOG_PACKET_HEADER_INIT(LOG_MOT_MSG),
         time_ms         : hal.scheduler->millis(),
