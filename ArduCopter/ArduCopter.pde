@@ -777,6 +777,9 @@ static const AP_Scheduler::Task scheduler_tasks[] PROGMEM = {
     { three_hz_loop,       133,      9 },
     { compass_accumulate,    8,     42 },
     { barometer_accumulate,  8,     25 },
+#if FRAME_CONFIG == TILTROTOR_Y6_FRAME
+    { read_airspeed,        40,   1200 },
+#endif
 #if FRAME_CONFIG == HELI_FRAME
     { check_dynamic_flight,  8,     10 },
 #endif
@@ -852,6 +855,9 @@ static const AP_Scheduler::Task scheduler_tasks[] PROGMEM = {
     { three_hz_loop,        33,      90 },
     { compass_accumulate,    2,     420 },
     { barometer_accumulate,  2,     250 },
+#if FRAME_CONFIG == TILTROTOR_Y6_FRAME
+    { read_airspeed,        10,    1200 },
+#endif
 #if FRAME_CONFIG == HELI_FRAME
     { check_dynamic_flight,  2,     100 },
 #endif
