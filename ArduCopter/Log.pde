@@ -409,6 +409,7 @@ static void Log_Write_Attitude()
 #endif
 }
 
+<<<<<<< HEAD
 // Write an rate packet
 static void Log_Write_Rate()
 {
@@ -428,6 +429,13 @@ static void Log_Write_Rate()
     };
     DataFlash.WriteBlock(&pkt_rate, sizeof(pkt_rate));
 }
+=======
+struct PACKED log_Mode {
+    LOG_PACKET_HEADER;
+    uint8_t mode;
+    int16_t throttle_cruise_copter;
+};
+>>>>>>> Copter:Tiltrotor_Y6: Airspeed Sensor Addition: Resolved conflict with MultiCopter Throttle parameters in Log.pde as to not interfere with FixedWing
 
 // Write an rate packet
 static void Log_Write_Mot()
