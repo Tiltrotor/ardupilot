@@ -381,6 +381,7 @@ public:
     AP_Int16        throttle_max_copter;
     AP_Int8         failsafe_throttle;
     AP_Int16        failsafe_throttle_value;
+    AP_Int16        throttle_trim;
     AP_Int16        throttle_mid;
     AP_Int16        throttle_deadzone;
 
