@@ -502,6 +502,88 @@ const AP_Param::Info var_info[] PROGMEM = {
     // @User: Standard
     GSCALAR(heli_stab_col_max, "H_STAB_COL_MAX", HELI_STAB_COLLECTIVE_MAX_DEFAULT),
 #endif
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+#if FRAME_CONFIG ==     TILTROTOR_Y6_FRAME
+    // @Param: ARSPD_FBW_MIN
+    // @DisplayName: Fly By Wire Minimum Airspeed
+    // @Description: Airspeed corresponding to minimum throttle in auto throttle modes (FBWB, CRUISE, AUTO, GUIDED, LOITER, CIRCLE and RTL). This is a calibrated (apparent) airspeed.
+    // @Units: m/s
+    // @Range: 5 50
+    // @Increment: 1
+    // @User: Standard
+    TSCALAR(airspeed_min, "ARSPD_FBW_MIN",  9),
+
+    // @Param: ARSPD_FBW_MAX
+    // @DisplayName: Fly By Wire Maximum Airspeed
+    // @Description: Airspeed corresponding to maximum throttle in auto throttle modes (FBWB, CRUISE, AUTO, GUIDED, LOITER, CIRCLE and RTL). This is a calibrated (apparent) airspeed.
+    // @Units: m/s
+    // @Range: 5 50
+    // @Increment: 1
+    // @User: Standard
+    TSCALAR(airspeed_max, "ARSPD_FBW_MAX",  22),
+
+    // @Param: LIM_PITCH_MAX
+    // @DisplayName: Maximum Pitch Angle
+    // @Description: The maximum commanded pitch up angle
+    // @Units: centi-Degrees
+    // @Range: 0 9000
+    // @Increment: 1
+    // @User: Standard
+    TSCALAR(pitch_limit_max_cd,     "LIM_PITCH_MAX",  25),
+
+    // @Param: LIM_PITCH_MIN
+    // @DisplayName: Minimum Pitch Angle
+    // @Description: The minimum commanded pitch down angle
+    // @Units: centi-Degrees
+    // @Range: -9000 0
+    // @Increment: 1
+    // @User: Standard
+       TSCALAR(pitch_limit_min_cd,     "LIM_PITCH_MIN",  -20),
+
+    
+    // @Param: THR_MAX
+    // @DisplayName: Minimum Throttle
+    // @Description: The minimum throttle setting to which the autopilot will apply.
+    // @Units: Percent
+    // @Range: 0 100
+    // @Increment: 1
+    // @User: Standard
+    TSCALAR(throttle_max,           "THR_MAX",        100),
+
+    // @Param: THR_MIN
+    // @DisplayName: Minimum Throttle
+    // @Description: The minimum throttle setting to which the autopilot will apply.
+    // @Units: Percent
+    // @Range: 0 100
+    // @Increment: 1
+    // @User: Standard
+    TSCALAR(throttle_min,           "THR_MIN",        0),
+
+    // @Param: TRIM_THROTTLE
+    // @DisplayName: Throttle cruise percentage
+    // @Description: The target percentage of throttle to apply for normal flight
+    // @Units: Percent
+    // @Range: 0 100
+    // @Increment: 1
+    // @User: Standard
+    TSCALAR(throttle_cruise,        "TRIM_THROTTLE",  45),
+   
+    // @Param: THR_SLEWRATE
+    // @DisplayName: Throttle slew rate
+    // @Description: maximum percentage change in throttle per second. A setting of 10 means to not change the throttle by more than 10% of the full throttle range in one second.
+    // @Units: Percent
+    // @Range: 0 100
+    // @Increment: 1
+    // @User: Standard
+    TSCALAR(throttle_slewrate,      "THR_SLEWRATE",   100),
+
+    // @Group: ARSPD_
+    // @Path: ../libraries/AP_Airspeed/AP_Airspeed.cpp
+    GOBJECT(airspeed,                               "ARSPD_",   AP_Airspeed),
+#endif
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     // RC channel
     //-----------
