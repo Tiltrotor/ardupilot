@@ -168,9 +168,9 @@
 static AP_Vehicle::MultiCopter aparm;
 
 //for a Tiltrotor ALSO pass these parameters
-//#if FRAME_CONFIG == TILTROTOR_Y6_FRAME 
+#if FRAME_CONFIG == TILTROTOR_Y6_FRAME 
 static AP_Vehicle::FixedWing aparmTR;
-//#endif
+#endif
 
 // Local modules
 #include "Parameters.h"
@@ -241,6 +241,13 @@ static DataFlash_Empty DataFlash;
 static const AP_InertialSensor::Sample_rate ins_sample_rate = AP_InertialSensor::RATE_400HZ;
 #else
 static const AP_InertialSensor::Sample_rate ins_sample_rate = AP_InertialSensor::RATE_100HZ;
+#endif
+
+
+// if your a tiltrotor - scaled roll limit based on pitch
+#if FRAME_CONFIG == TILTROTOR_Y6_FRAME 
+static int32_t roll_limit_cd;
+static int32_t pitch_limit_min_cd;
 #endif
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -806,6 +813,7 @@ static const AP_Scheduler::Task scheduler_tasks[] PROGMEM = {
     { barometer_accumulate,  8,     25 },
 #if FRAME_CONFIG == TILTROTOR_Y6_FRAME
     { read_airspeed,        40,   1200 },
+    { airspeed_ratio_update,400,  1000 },
 #endif
 #if FRAME_CONFIG == HELI_FRAME
     { check_dynamic_flight,  8,     10 },
@@ -877,6 +885,7 @@ static const AP_Scheduler::Task scheduler_tasks[] PROGMEM = {
     { barometer_accumulate,  2,     250 },
 #if FRAME_CONFIG == TILTROTOR_Y6_FRAME
     { read_airspeed,        10,    1200 },
+    { airspeed_ratio_update,400,   1000 },
 #endif
 #if FRAME_CONFIG == HELI_FRAME
     { check_dynamic_flight,  2,     100 },
@@ -1246,6 +1255,38 @@ static void update_optical_flow(void)
 }
 #endif  // OPTFLOW == ENABLED
 
+/*
+  If your a tiltrotor, once a second update the airspeed calibration ratio
+ */
+#if FRAME_CONFIG == TILTROTOR_Y6_FRAME 
+static void airspeed_ratio_update(void)
+{
+    if (!airspeed.enabled() ||
+        gps.status() < AP_GPS::GPS_OK_FIX_3D ||
+        gps.ground_speed() < 4) {
+        // don't calibrate when not moving
+        return;        
+    }
+    if (airspeed.get_airspeed() < aparmTR.airspeed_min && 
+        gps.ground_speed() < (uint32_t)aparmTR.airspeed_min) {
+        // don't calibrate when flying below the minimum airspeed. We
+        // check both airspeed and ground speed to catch cases where
+        // the airspeed ratio is way too low, which could lead to it
+        // never coming up again
+        return;
+    }
+    if (abs(ahrs.roll_sensor) > roll_limit_cd ||
+        ahrs.pitch_sensor > aparmTR.pitch_limit_max_cd ||
+        ahrs.pitch_sensor < pitch_limit_min_cd) {
+        // don't calibrate when going beyond normal flight envelope
+        return;
+    }
+    const Vector3f &vg = gps.velocity();
+    airspeed.update_calibration(vg);
+}
+#endif
+
+
 // called at 50hz
 static void update_GPS(void)
 {
@@ -1421,6 +1462,10 @@ static void update_altitude()
     // write altitude info to dataflash logs
     if (should_log(MASK_LOG_CTUN)) {
         Log_Write_Control_Tuning();
+        
+        // calculate a scaled roll limit based on current pitch ***NEED TO MAKE THIS TILTROTOR SPECIFIC
+    roll_limit_cd = g.roll_limit_cd * cosf(ahrs.pitch);
+    pitch_limit_min_cd = aparmTR.pitch_limit_min_cd * fabsf(cosf(ahrs.roll));
     }
 }
 
