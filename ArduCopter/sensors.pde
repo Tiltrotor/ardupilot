@@ -102,11 +102,14 @@ static void init_optflow()
 #if FRAME_CONFIG == TILTROTOR_Y6_FRAME
 static void read_airspeed(void)
 {
-   if (airspeed.enabled()) {
-      airspeed.read();
+    if (airspeed.enabled()) {
+        airspeed.read();
+        if (should_log(MASK_LOG_IMU)) {
+            Log_Write_Airspeed();
+        }
+        
     }
 }
-
 static void zero_airspeed(void)
 {
     airspeed.calibrate();
