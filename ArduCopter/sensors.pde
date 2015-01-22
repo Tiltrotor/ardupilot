@@ -148,7 +148,8 @@ static void read_airspeed(void)
 {
     if (airspeed.enabled()) {
         airspeed.read();
-
+    if (should_log(MASK_LOG_IMU)) {
+        Log_Write_Airspeed();
         // supply a new temperature to the barometer from the digital
         // airspeed sensor if we can
         float temperature;
@@ -156,8 +157,8 @@ static void read_airspeed(void)
             barometer.set_external_temperature(temperature);
         }
     }
+    }
 }
-
 
 static void zero_airspeed(bool in_startup)
 {
@@ -167,6 +168,7 @@ static void zero_airspeed(bool in_startup)
     barometer.update_calibration();
     gcs_send_text_P(SEVERITY_LOW,PSTR("zero airspeed calibrated"));
 }
+
 #endif
 
 // read_battery - check battery voltage and current and invoke failsafe if necessary
