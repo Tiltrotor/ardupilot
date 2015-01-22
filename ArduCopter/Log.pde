@@ -409,6 +409,7 @@ static void Log_Write_Attitude()
 #endif
 }
 
+
 // Write an rate packet
 static void Log_Write_Rate()
 {
