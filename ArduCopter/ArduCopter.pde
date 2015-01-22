@@ -1264,7 +1264,7 @@ return;
 }
 if (airspeed.get_airspeed() < aparmTR.airspeed_min &&
 gps.ground_speed() < (uint32_t)aparmTR.airspeed_min) {
-don't calibrate when flying below the minimum airspeed. We
+//don't calibrate when flying below the minimum airspeed. We
 // check both airspeed and ground speed to catch cases where
 // the airspeed ratio is way too low, which could lead to it
 // never coming up again
