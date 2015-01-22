@@ -361,6 +361,7 @@ static void Log_Write_Cmd(const AP_Mission::Mission_Command &cmd)
 }
 
 
+
 // Write an attitude packet
 static void Log_Write_Attitude()
 {
@@ -397,6 +398,16 @@ struct PACKED log_Event {
     LOG_PACKET_HEADER;
     uint8_t id;
 };
+
+#if FRAME_CONFIG == TILTROTOR_Y6_FRAME
+// Write a AIRSPEED packet
+static void Log_Write_Airspeed(void)
+{
+    DataFlash.Log_Write_Airspeed(airspeed);
+}
+#endif
+
+
 
 // Wrote an event packet
 static void Log_Write_Event(uint8_t id)
@@ -619,6 +630,7 @@ static void Log_Write_AutoTune(uint8_t axis, uint8_t tune_step, float rate_min, 
 static void Log_Write_AutoTuneDetails(int16_t angle_cd, float rate_cds) {}
 #endif
 static void Log_Write_Current() {}
+static void Log_Write_Airspeed(void) {}
 static void Log_Write_Attitude() {}
 static void Log_Write_Data(uint8_t id, int16_t value){}
 static void Log_Write_Data(uint8_t id, uint16_t value){}
