@@ -376,7 +376,7 @@ static void NOINLINE send_radio_out(mavlink_channel_t chan)
 
 static void NOINLINE send_vfr_hud(mavlink_channel_t chan)
 {
-    
+   //***Need to make this tiltrotor specific*** 
     float aspeed;
     if (airspeed.enabled()) {
         aspeed = airspeed.get_airspeed();
