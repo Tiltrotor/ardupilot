@@ -1370,8 +1370,10 @@ static void update_altitude()
         Log_Write_Control_Tuning();
         
         // calculate a scaled roll limit based on current pitch ***NEED TO MAKE THIS TILTROTOR SPECIFIC
+     #if FRAME_CONFIG == TILTROTOR_Y6_FRAME   
       roll_limit_cd = g.roll_limit_cd * cosf(ahrs.pitch);
       pitch_limit_min_cd = aparmTR.pitch_limit_min_cd * fabsf(cosf(ahrs.roll));
+     #endif
     }
 }
 
