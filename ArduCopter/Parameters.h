@@ -446,7 +446,8 @@ public:
   											  // Single
     RC_Channel      single_servo_1, single_servo_2, single_servo_3, single_servo_4;     // servos for four flaps
     AP_Int16        roll_limit_cd;
-    AP_Int32        airspeed_cruise_cm;#endif
+    AP_Int32        airspeed_cruise_cm;
+#endif
 
     // RC channels
     RC_Channel              rc_1;
