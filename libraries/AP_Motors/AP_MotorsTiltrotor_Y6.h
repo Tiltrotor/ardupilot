@@ -1,4 +1,3 @@
-<<<<<<< .mine
 // -*- tab-width: 4; Mode: C++; c-basic-offset: 4; indent-tabs-mode: nil -*-
 
 /// @file	AP_MotorsSingle.h
@@ -76,7 +75,7 @@ protected:
 };
 
 #endif  // AP_MOTORSSINGLE
-=======
+
 // -*- tab-width: 4; Mode: C++; c-basic-offset: 4; indent-tabs-mode: nil -*-
 
 /// @file	AP_MotorsTiltrotor_Y6.h (Started with Copy paste of AP_MotorsSingle.h)
@@ -154,4 +153,3 @@ protected:
 };
 
 #endif  // AP_MOTORSTILTROTOR_Y6
->>>>>>> .theirs
