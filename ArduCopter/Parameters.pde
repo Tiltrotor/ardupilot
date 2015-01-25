@@ -1190,8 +1190,8 @@ const AP_Param::Info var_info[] PROGMEM = {
     // @Path: ../libraries/RC_Channel/RC_Channel.cpp
     GGROUP(single_servo_4,    "SS4_", RC_Channel),
     // @Group: MOT_
-    // @Path: ../libraries/AP_Motors/AP_MotorsSingle.cpp
-    GOBJECT(motors, "MOT_",           AP_MotorsSingle),
+    // @Path: ../libraries/AP_Motors/AP_MotorsTiltrotor_Y6.cpp
+    GOBJECT(motors, "MOT_",           AP_MotorsTiltrotor_Y6),
 
 
 #else
