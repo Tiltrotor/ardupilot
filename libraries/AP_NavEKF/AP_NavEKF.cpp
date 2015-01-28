@@ -1931,6 +1931,10 @@ void NavEKF::FuseVelPosNED()
         R_OBS[3] = sq(constrain_float(_gpsHorizPosNoise, 0.1f, 10.0f)) + sq(posErr);
         R_OBS[4] = R_OBS[3];
         R_OBS[5] = sq(constrain_float(_baroAltNoise, 0.1f, 10.0f));
+        // reduce weighting (increase observation noise) on baro if we are likely to be in ground effect
+        if (getGndEffectMode()) {
+            R_OBS[5] *= gndEffectBaroScaler;
+        }
 
         // reduce weighting (increase observation noise) on baro if we are likely to be in ground effect
         if (getGndEffectMode() && vehicleArmed) {
