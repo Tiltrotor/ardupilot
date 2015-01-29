@@ -313,8 +313,8 @@ public:
         k_param_p_stabilize_yaw,
         k_param_p_loiter_pos,
         k_param_p_loiter_lon,       // remove
-        k_param_pid_loiter_rate_lat,
-        k_param_pid_loiter_rate_lon,
+        k_param_pid_loiter_rate_lat,    // remove
+        k_param_pid_loiter_rate_lon,    // remove
         k_param_pid_nav_lat,        // 233 - remove
         k_param_pid_nav_lon,        // 234 - remove
         k_param_p_alt_hold,
@@ -332,6 +332,7 @@ public:
         k_param_pid_rate_yaw_mot, //247 Added for the Yaw rate Motor contribution for a Tiltrotor_Y6
         k_param_autotune_axis_bitmask,  // 245
         k_param_autotune_aggressiveness,  // 246
+        k_param_pi_vel_xy,  // 247
 
         // 254,255: reserved
     };
@@ -469,8 +470,7 @@ public:
     AC_PID                  pid_rate_pitch;
     AC_PID                  pid_rate_yaw;
 #endif
-    AC_PID                  pid_loiter_rate_lat;
-    AC_PID                  pid_loiter_rate_lon;
+    AC_PI_2D                pi_vel_xy;
 
 #if FRAME_CONFIG == TILTROTOR_Y6_FRAME
     AC_PID          		pid_rate_roll_aero;
@@ -546,11 +546,15 @@ public:
         pid_rate_pitch          (RATE_PITCH_P,    RATE_PITCH_I,     RATE_PITCH_D,   RATE_PITCH_IMAX,    RATE_PITCH_FILT_HZ, MAIN_LOOP_SECONDS),
         pid_rate_yaw            (RATE_YAW_P,      RATE_YAW_I,       RATE_YAW_D,     RATE_YAW_IMAX,      RATE_YAW_FILT_HZ,   MAIN_LOOP_SECONDS),
 
+
 #if FRAME_CONFIG ==     TILTROTOR_Y6_FRAME
         pid_rate_roll_aero      (RATE_ROLL_P_AERO,      RATE_ROLL_I_AERO,       RATE_ROLL_D_AERO,       RATE_ROLL_IMAX_AERO, RATE_ROLL_FILT_HZ,  MAIN_LOOP_SECONDS ),
         pid_rate_pit_aero       (RATE_PITCH_P_AERO,     RATE_PITCH_I_AERO,      RATE_PITCH_D_AERO,      RATE_PITCH_IMAX_AERO, RATE_PITCH_FILT_HZ, MAIN_LOOP_SECONDS),
         pid_rate_yaw_mot        (RATE_YAW_P_MOT,        RATE_YAW_I_MOT,         RATE_YAW_D_MOT,         RATE_YAW_IMAX_MOT, RATE_YAW_FILT_HZ,   MAIN_LOOP_SECONDS),
 #endif
+
+        pi_vel_xy               (VEL_XY_P,        VEL_XY_I,                         VEL_XY_IMAX,        VEL_XY_FILT_HZ,     WPNAV_LOITER_UPDATE_TIME),
+
 
         p_throttle_rate         (THROTTLE_RATE_P),
         pid_throttle_accel      (THROTTLE_ACCEL_P,THROTTLE_ACCEL_I, THROTTLE_ACCEL_D,THROTTLE_ACCEL_IMAX, THROTTLE_ACCEL_FILT_HZ, MAIN_LOOP_SECONDS),
