@@ -883,11 +883,13 @@ const AP_Param::Info var_info[] PROGMEM = {
     // @User: Standard
     GGROUP(p_stabilize_yaw,        "STB_YAW_", AC_P),
 
-    // @Param: THR_ALT_P
-    // @DisplayName: Altitude controller P gain
-    // @Description: Altitude controller P gain.  Converts the difference between the desired altitude and actual altitude into a climb or descent rate which is passed to the throttle rate controller
+    // @Param: POS_Z_P
+    // @DisplayName: Position (vertical) controller P gain
+    // @Description: Position (vertical) controller P gain.  Converts the difference between the desired altitude and actual altitude into a climb or descent rate which is passed to the throttle rate controller
     // @Range: 1.000 3.000
     // @User: Standard
+    GGROUP(p_alt_hold,              "POS_Z_", AC_P),
+
     GGROUP(p_alt_hold,     "THR_ALT_", AC_P),
 
     
