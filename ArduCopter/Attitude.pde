@@ -82,15 +82,17 @@ static float get_look_ahead_yaw()
  *  throttle control
  ****************************************************************/
 
-// update_thr_cruise - update throttle cruise if necessary
+// update_thr_average - update estimated throttle required to hover (if necessary)
 //  should be called at 100hz
-static void update_thr_cruise()
+static void update_thr_average()
 {
-    // ensure throttle_avg has been initialised
-    if( throttle_avg == 0 ) {
-        throttle_avg = g.throttle_cruise_copter;
+
+    // ensure throttle_average has been initialised
+    if( throttle_average == 0 ) {
+        throttle_average = g.throttle_mid;
+
         // update position controller
-        pos_control.set_throttle_hover(throttle_avg);
+        pos_control.set_throttle_hover(throttle_average);
     }
 
     // if not armed or landed exit
@@ -102,11 +104,12 @@ static void update_thr_cruise()
     int16_t throttle = g.rc_3.servo_out;
 
     // calc average throttle if we are in a level hover
-    if (throttle > g.throttle_min_copter && abs(climb_rate) < 60 && labs(ahrs.roll_sensor) < 500 && labs(ahrs.pitch_sensor) < 500) {
-        throttle_avg = throttle_avg * 0.99f + (float)throttle * 0.01f;
-        g.throttle_cruise_copter = throttle_avg;
+
+    if (throttle > g.throttle_min && abs(climb_rate) < 60 && labs(ahrs.roll_sensor) < 500 && labs(ahrs.pitch_sensor) < 500) {
+        throttle_average = throttle_average * 0.99f + (float)throttle * 0.01f;
+
         // update position controller
-        pos_control.set_throttle_hover(throttle_avg);
+        pos_control.set_throttle_hover(throttle_average);
     }
 }
 
@@ -272,5 +275,7 @@ static float get_throttle_surface_tracking(int16_t target_rate, float current_al
 static void set_accel_throttle_I_from_pilot_throttle(int16_t pilot_throttle)
 {
     // shift difference between pilot's throttle and hover throttle into accelerometer I
-    g.pid_throttle_accel.set_integrator(pilot_throttle-g.throttle_cruise_copter);
+
+    g.pid_accel_z.set_integrator(pilot_throttle-throttle_average);
+
 }

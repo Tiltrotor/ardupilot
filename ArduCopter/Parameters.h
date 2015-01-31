@@ -261,7 +261,7 @@ public:
         k_param_failsafe_throttle,
         k_param_throttle_fs_action,     // remove
         k_param_failsafe_throttle_value,
-        k_param_throttle_cruise_copter,
+        k_param_throttle_trim,          
         k_param_esc_calibrate,
         k_param_radio_tuning,
         k_param_radio_tuning_high,
@@ -382,7 +382,6 @@ public:
     AP_Int16        throttle_max_copter;
     AP_Int8         failsafe_throttle;
     AP_Int16        failsafe_throttle_value;
-    AP_Int16        throttle_cruise_copter;
     AP_Int16        throttle_mid;
     AP_Int16        throttle_deadzone;
 
