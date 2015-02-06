@@ -121,7 +121,7 @@ static void init_ardupilot()
 
     // initialise battery monitor
     battery.init();
-    
+
     rssi_analog_source      = hal.analogin->channel(g.rssi_pin);
 
     barometer.init();
@@ -131,8 +131,6 @@ static void init_ardupilot()
     airspeed.init();
 #endif
 
-    // init the GCS
-    gcs[0].init(hal.uartA);
 
     // Register the mavlink service callback. This will run
     // anytime there are more than 5ms remaining in a call to
@@ -387,7 +385,7 @@ static void update_auto_armed()
         }
     }else{
         // arm checks
-        
+
 #if FRAME_CONFIG == HELI_FRAME
         // for tradheli if motors are armed and throttle is above zero and the motor is started, auto_armed should be true
         if(motors.armed() && !ap.throttle_zero && motors.motor_runup_complete()) {
