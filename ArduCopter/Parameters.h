@@ -209,27 +209,6 @@ public:
          k_param_ch11_option,
          k_param_ch12_option,     // 131
 
-        // 120: Tiltrotor Vehicle stuff from aparmTR
-         k_param_airspeed_min = 120,
-         k_param_airspeed_max,
-         k_param_airspeed,
-         k_param_pitch_limit_max_cd,
-         k_param_pitch_limit_min_cd,
-         k_param_throttle_max,
-         k_param_throttle_min,
-         k_param_throttle_cruise, //126
-         k_param_throttle_slewrate,
-
-        // 120: Tiltrotor Vehicle stuff from aparmTR
-         k_param_airspeed_min = 120,
-         k_param_airspeed_max,
-         k_param_airspeed,
-         k_param_pitch_limit_max_cd,
-         k_param_pitch_limit_min_cd,
-         k_param_throttle_max,
-         k_param_throttle_min,
-         k_param_throttle_cruise, //126
-         k_param_throttle_slewrate,
 
         //
         // 140: Sensor parameters
