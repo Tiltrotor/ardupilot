@@ -699,6 +699,8 @@ private:
 
     bool haveDeltaAngles;
 
+    bool haveDeltaAngles;
+
     // states held by optical flow fusion across time steps
     // optical flow X,Y motion compensated rate measurements are fused across two time steps
     // to level computational load as this can be an expensive operation
