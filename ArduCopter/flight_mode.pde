@@ -32,6 +32,8 @@ static bool set_mode(uint8_t mode)
         case STABILIZE:
             #if FRAME_CONFIG == HELI_FRAME
                 success = heli_stabilize_init(ignore_checks);
+            #elif FRAME_CONFIG == TILTROTOR_Y6_FRAME
+                success = stabilize_TR_Y6_init(ignore_checks);
             #else
                 success = stabilize_init(ignore_checks);
             #endif
@@ -138,6 +140,10 @@ static void update_flight_mode()
         case STABILIZE:
             #if FRAME_CONFIG == HELI_FRAME
                 heli_stabilize_run();
+             #elif FRAME_CONFIG == TILTROTOR_Y6_FRAME
+
+                stabilize_TR_Y6_run();
+
             #else
                 stabilize_run();
             #endif
@@ -227,7 +233,7 @@ static void exit_mode(uint8_t old_control_mode, uint8_t new_control_mode)
         // this assumes all manual flight modes use get_pilot_desired_throttle to translate pilot input to output throttle
         set_accel_throttle_I_from_pilot_throttle(get_pilot_desired_throttle(g.rc_3.control_in));
     }
-    
+
 #if FRAME_CONFIG == HELI_FRAME
     // firmly reset the flybar passthrough to false when exiting acro mode.
     if (old_control_mode == ACRO) {
@@ -333,4 +339,3 @@ print_flight_mode(AP_HAL::BetterStream *port, uint8_t mode)
         break;
     }
 }
-
