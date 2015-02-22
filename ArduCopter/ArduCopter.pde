@@ -1,6 +1,6 @@
 /// -*- tab-width: 4; Mode: C++; c-basic-offset: 4; indent-tabs-mode: nil -*-
 
-#define THISFIRMWARE "ArduCopter V3.2.1"
+#define THISFIRMWARE "ArduCopter V3.2.1- Tiltrotor Y6 V1_7_0"
 /*
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -19,8 +19,8 @@
  *  ArduCopter Version 3.0
  *  Creator:        Jason Short
  *  Lead Developer: Randy Mackay
- *  Lead Tester:    Marco Robustini 
- *  Based on code and ideas from the Arducopter team: Leonard Hall, Andrew Tridgell, Robert Lefebvre, Pat Hickey, Michael Oborne, Jani Hirvinen, 
+ *  Lead Tester:    Marco Robustini
+ *  Based on code and ideas from the Arducopter team: Leonard Hall, Andrew Tridgell, Robert Lefebvre, Pat Hickey, Michael Oborne, Jani Hirvinen,
                                                       Olivier Adler, Kevin Hester, Arthur Benemann, Jonathan Challinger, John Arne Birkeland,
                                                       Jean-Louis Naudin, Mike Smith, and more
  *  Thanks to:	Chris Anderson, Jordi Munoz, Jason Short, Doug Weibel, Jose Julio
@@ -168,7 +168,7 @@
 static AP_Vehicle::MultiCopter aparm;
 
 //for a Tiltrotor ALSO pass these parameters
-#if FRAME_CONFIG == TILTROTOR_Y6_FRAME 
+#if FRAME_CONFIG == TILTROTOR_Y6_FRAME
 static AP_Vehicle::FixedWing aparmTR;
 #endif
 
@@ -245,7 +245,7 @@ static const AP_InertialSensor::Sample_rate ins_sample_rate = AP_InertialSensor:
 
 
 // if your a tiltrotor - scaled roll limit based on pitch
-#if FRAME_CONFIG == TILTROTOR_Y6_FRAME 
+#if FRAME_CONFIG == TILTROTOR_Y6_FRAME
 static int32_t roll_limit_cd;
 static int32_t pitch_limit_min_cd;
 #endif
@@ -346,7 +346,7 @@ static bool sonar_enabled = true; // enable user switch for sonar
 ////////////////////////////////////////////////////////////////////////////////
 // Airspeed Sensor for a tiltrotor
 ////////////////////////////////////////////////////////////////////////////////
-#if FRAME_CONFIG == TILTROTOR_Y6_FRAME 
+#if FRAME_CONFIG == TILTROTOR_Y6_FRAME
 AP_Airspeed airspeed(aparmTR);
 #endif
 ////////////////////////////////////////////////////////////////////////////////
@@ -795,7 +795,7 @@ AP_Param param_loader(var_info);
   133  = 3hz
   400  = 1hz
   4000 = 0.1hz
-  
+
  */
 static const AP_Scheduler::Task scheduler_tasks[] PROGMEM = {
     { rc_loop,               4,     10 },
@@ -835,7 +835,7 @@ static const AP_Scheduler::Task scheduler_tasks[] PROGMEM = {
     { perf_update,        4000,     20 },
     { read_receiver_rssi,   40,      5 },
 #if FRSKY_TELEM_ENABLED == ENABLED
-    { telemetry_send,       80,     10 },	
+    { telemetry_send,       80,     10 },
 #endif
 #ifdef USERHOOK_FASTLOOP
     { userhook_FastLoop,     4,     10 },
@@ -904,7 +904,7 @@ static const AP_Scheduler::Task scheduler_tasks[] PROGMEM = {
     { perf_update,        1000,     200 },
     { read_receiver_rssi,   10,      50 },
 #if FRSKY_TELEM_ENABLED == ENABLED
-    { telemetry_send,       20,     100 },	
+    { telemetry_send,       20,     100 },
 #endif
 #ifdef USERHOOK_FASTLOOP
     { userhook_FastLoop,     1,    100  },
@@ -925,7 +925,7 @@ static const AP_Scheduler::Task scheduler_tasks[] PROGMEM = {
 #endif
 
 
-void setup() 
+void setup()
 {
     cliSerial = hal.console;
 
@@ -1016,7 +1016,7 @@ static void fast_loop()
 
     // run low level rate controllers that only require IMU data
     attitude_control.rate_controller_run();
-    
+
 #if FRAME_CONFIG == HELI_FRAME
     update_heli_control_dynamics();
 #endif //HELI_FRAME
@@ -1258,16 +1258,16 @@ static void update_optical_flow(void)
 /*
   If your a tiltrotor, once a second update the airspeed calibration ratio
  */
-#if FRAME_CONFIG == TILTROTOR_Y6_FRAME 
+#if FRAME_CONFIG == TILTROTOR_Y6_FRAME
 static void airspeed_ratio_update(void)
 {
     if (!airspeed.enabled() ||
         gps.status() < AP_GPS::GPS_OK_FIX_3D ||
         gps.ground_speed() < 4) {
         // don't calibrate when not moving
-        return;        
+        return;
     }
-    if (airspeed.get_airspeed() < aparmTR.airspeed_min && 
+    if (airspeed.get_airspeed() < aparmTR.airspeed_min &&
         gps.ground_speed() < (uint32_t)aparmTR.airspeed_min) {
         // don't calibrate when flying below the minimum airspeed. We
         // check both airspeed and ground speed to catch cases where
@@ -1343,7 +1343,7 @@ static void update_GPS(void)
 
                         // set system clock for log timestamps
                         hal.util->set_system_clock(gps.time_epoch_usec());
-                        
+
                         if (g.compass_enabled) {
                             // Set compass declination automatically
                             compass.set_initial_location(gps.location().lat, gps.location().lng);
@@ -1355,7 +1355,7 @@ static void update_GPS(void)
                 }
             }
 
-            //If we are not currently armed, and we're ready to 
+            //If we are not currently armed, and we're ready to
             //enter RTK mode, then capture current state as home,
             //and enter RTK fixes!
             if (!motors.armed() && gps.can_calculate_base_pos()) {
@@ -1462,7 +1462,7 @@ static void update_altitude()
     // write altitude info to dataflash logs
     if (should_log(MASK_LOG_CTUN)) {
         Log_Write_Control_Tuning();
-        
+
         // calculate a scaled roll limit based on current pitch ***NEED TO MAKE THIS TILTROTOR SPECIFIC
     roll_limit_cd = g.roll_limit_cd * cosf(ahrs.pitch);
     pitch_limit_min_cd = aparmTR.pitch_limit_min_cd * fabsf(cosf(ahrs.roll));
@@ -1579,14 +1579,14 @@ static void tuning(){
     case CH6_RATE_PITCH_FF:
         g.pid_rate_pitch.ff(tuning_value);
         break;
-        
+
     case CH6_RATE_ROLL_FF:
         g.pid_rate_roll.ff(tuning_value);
         break;
-        
+
     case CH6_RATE_YAW_FF:
         g.pid_rate_yaw.ff(tuning_value);
-        break;        
+        break;
 #endif
 
     case CH6_OPTFLOW_KP:
@@ -1649,27 +1649,27 @@ static void tuning(){
         // roll-pitch input smoothing
         g.rc_feel_rp = g.rc_6.control_in / 10;
         break;
-    
+
     case CH6_RATE_PITCH_KP:
         g.pid_rate_pitch.kP(tuning_value);
         break;
-        
+
     case CH6_RATE_PITCH_KI:
         g.pid_rate_pitch.kI(tuning_value);
         break;
-        
+
     case CH6_RATE_PITCH_KD:
         g.pid_rate_pitch.kD(tuning_value);
         break;
-        
+
     case CH6_RATE_ROLL_KP:
         g.pid_rate_roll.kP(tuning_value);
         break;
-        
+
     case CH6_RATE_ROLL_KI:
         g.pid_rate_roll.kI(tuning_value);
         break;
-        
+
     case CH6_RATE_ROLL_KD:
         g.pid_rate_roll.kD(tuning_value);
         break;
@@ -1677,4 +1677,3 @@ static void tuning(){
 }
 
 AP_HAL_MAIN();
-
