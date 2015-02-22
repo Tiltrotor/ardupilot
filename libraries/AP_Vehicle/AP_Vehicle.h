@@ -29,13 +29,13 @@ public:
      */
     struct FixedWing {
         AP_Int8 throttle_min;
-        AP_Int8 throttle_max;	
+        AP_Int8 throttle_max;
         AP_Int8 throttle_slewrate;
         AP_Int8 throttle_cruise;
         AP_Int16 airspeed_min;
         AP_Int16 airspeed_max;
         AP_Int16 pitch_limit_max_cd;
-        AP_Int16 pitch_limit_min_cd;        
+        AP_Int16 pitch_limit_min_cd;
         AP_Int8  autotune_level;
     };
 
@@ -44,6 +44,8 @@ public:
      */
     struct MultiCopter {
         AP_Int16 angle_max;
+        float tvec_angle_pwm;
+        float tvec_angle_deg;
     };
 };
 
