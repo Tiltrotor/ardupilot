@@ -1,6 +1,6 @@
 /// -*- tab-width: 4; Mode: C++; c-basic-offset: 4; indent-tabs-mode: nil -*-
 
-#define THISFIRMWARE "ArduCopter V3.3-dev"
+#define THISFIRMWARE "ArduCopter V3.3-dev- Tiltrotor Y6 V1_7_0"
 /*
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -19,8 +19,8 @@
  *  ArduCopter Version 3.0
  *  Creator:        Jason Short
  *  Lead Developer: Randy Mackay
- *  Lead Tester:    Marco Robustini 
- *  Based on code and ideas from the Arducopter team: Leonard Hall, Andrew Tridgell, Robert Lefebvre, Pat Hickey, Michael Oborne, Jani Hirvinen, 
+ *  Lead Tester:    Marco Robustini
+ *  Based on code and ideas from the Arducopter team: Leonard Hall, Andrew Tridgell, Robert Lefebvre, Pat Hickey, Michael Oborne, Jani Hirvinen,
                                                       Olivier Adler, Kevin Hester, Arthur Benemann, Jonathan Challinger, John Arne Birkeland,
                                                       Jean-Louis Naudin, Mike Smith, and more
  *  Thanks to:	Chris Anderson, Jordi Munoz, Jason Short, Doug Weibel, Jose Julio
@@ -170,7 +170,7 @@
 static AP_Vehicle::MultiCopter aparm;
 
 //for a Tiltrotor ALSO pass these parameters
-#if FRAME_CONFIG == TILTROTOR_Y6_FRAME 
+#if FRAME_CONFIG == TILTROTOR_Y6_FRAME
 static AP_Vehicle::FixedWing aparmTR;
 #endif
 
@@ -350,7 +350,7 @@ static bool sonar_enabled = true; // enable user switch for sonar
 ////////////////////////////////////////////////////////////////////////////////
 // Airspeed Sensor for a tiltrotor
 ////////////////////////////////////////////////////////////////////////////////
-#if FRAME_CONFIG == TILTROTOR_Y6_FRAME 
+#if FRAME_CONFIG == TILTROTOR_Y6_FRAME
 AP_Airspeed airspeed(aparmTR);
 #endif
 ////////////////////////////////////////////////////////////////////////////////
@@ -470,8 +470,8 @@ static MOTOR_CLASS motors(g.rc_1, g.rc_2, g.rc_3, g.rc_4, g.rc_7);
 #elif FRAME_CONFIG == SINGLE_FRAME  // single constructor requires extra servos for flaps
 static MOTOR_CLASS motors(g.rc_1, g.rc_2, g.rc_3, g.rc_4, g.single_servo_1, g.single_servo_2, g.single_servo_3, g.single_servo_4);
 #elif FRAME_CONFIG == COAX_FRAME  // single constructor requires extra servos for flaps
-static MOTOR_CLASS motors(g.rc_1, g.rc_2, g.rc_3, g.rc_4, g.single_servo_1, g.single_servo_2);             
-#elif FRAME_CONFIG == TILTROTOR_Y6_FRAME  // single constructor for Tiltrotor_y6 
+static MOTOR_CLASS motors(g.rc_1, g.rc_2, g.rc_3, g.rc_4, g.single_servo_1, g.single_servo_2);
+#elif FRAME_CONFIG == TILTROTOR_Y6_FRAME  // single constructor for Tiltrotor_y6
 static MOTOR_CLASS motors(g.rc_1, g.rc_2, g.rc_3, g.rc_4, g.single_servo_1, g.single_servo_2, g.single_servo_3, g.single_servo_4); //Copy of Single Frame
 #else
 static MOTOR_CLASS motors(g.rc_1, g.rc_2, g.rc_3, g.rc_4);
@@ -763,7 +763,7 @@ AP_Param param_loader(var_info);
   133  = 3hz
   400  = 1hz
   4000 = 0.1hz
-  
+
  */
 static const AP_Scheduler::Task scheduler_tasks[] PROGMEM = {
     { rc_loop,               4,     10 },
@@ -907,7 +907,7 @@ static const AP_Scheduler::Task scheduler_tasks[] PROGMEM = {
 #endif
 
 
-void setup() 
+void setup()
 {
     cliSerial = hal.console;
 
@@ -1004,7 +1004,7 @@ static void fast_loop()
 
     // run low level rate controllers that only require IMU data
     attitude_control.rate_controller_run();
-    
+
 #if FRAME_CONFIG == HELI_FRAME
     update_heli_control_dynamics();
 #endif //HELI_FRAME
@@ -1368,9 +1368,9 @@ static void update_altitude()
     // write altitude info to dataflash logs
     if (should_log(MASK_LOG_CTUN)) {
         Log_Write_Control_Tuning();
-        
+
         // calculate a scaled roll limit based on current pitch ***NEED TO MAKE THIS TILTROTOR SPECIFIC
-     #if FRAME_CONFIG == TILTROTOR_Y6_FRAME   
+     #if FRAME_CONFIG == TILTROTOR_Y6_FRAME
       roll_limit_cd = g.roll_limit_cd * cosf(ahrs.pitch);
       pitch_limit_min_cd = aparmTR.pitch_limit_min_cd * fabsf(cosf(ahrs.roll));
      #endif
@@ -1378,4 +1378,3 @@ static void update_altitude()
 }
 
 AP_HAL_MAIN();
-
