@@ -179,6 +179,9 @@ void AP_MotorsMatrix::output_armed()
         // Every thing is limited
         limit.roll_pitch = true;
         limit.yaw = true;
+        _batt_voltage_resting = _batt_voltage;
+        _batt_current_resting = _batt_current;
+        _batt_timer = 0;
 
     } else {
 
@@ -187,6 +190,13 @@ void AP_MotorsMatrix::output_armed()
             limit.throttle_lower = true;
             _rc_throttle.servo_out = _min_throttle;
             _rc_throttle.calc_pwm();    // recalculate radio.out
+        }
+
+        // calculate battery resistance
+        if (_batt_timer < 400 && _rc_throttle.radio_out >= _hover_out && ((_batt_current_resting*2.0f) < _batt_current)) {
+            // filter reaches 90% in 1/4 the test time
+            _batt_resistance += 0.05*(( (_batt_voltage_resting-_batt_voltage)/(_batt_current-_batt_current_resting) ) - _batt_resistance);
+            _batt_timer += 1;
         }
 
         // calculate roll and pitch for each motor
