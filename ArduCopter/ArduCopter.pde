@@ -1005,6 +1005,9 @@ static void fast_loop()
 
     // run the attitude controllers
     update_flight_mode();
+
+    // update home from EKF if necessary
+    update_home_from_EKF();
 }
 
 // rc_loops - reads user input from transmitter/receiver
