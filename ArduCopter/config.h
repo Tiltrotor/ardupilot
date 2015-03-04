@@ -694,6 +694,9 @@
 #ifndef RATE_ROLL_IMAX
  # define RATE_ROLL_IMAX         	1000
 #endif
+#ifndef RATE_ROLL_FILT_HZ
+ # define RATE_ROLL_FILT_HZ         20.0f
+#endif
 
 #ifndef RATE_PITCH_P
  # define RATE_PITCH_P       		0.150f
@@ -707,6 +710,10 @@
 #ifndef RATE_PITCH_IMAX
  # define RATE_PITCH_IMAX        	1000
 #endif
+#ifndef RATE_PITCH_FILT_HZ
+ # define RATE_PITCH_FILT_HZ        20.0f
+#endif
+
 
 #ifndef RATE_YAW_P
  # define RATE_YAW_P              	0.200f
@@ -719,6 +726,9 @@
 #endif
 #ifndef RATE_YAW_IMAX
  # define RATE_YAW_IMAX            	1000
+#endif
+#ifndef RATE_YAW_FILT_HZ
+ # define RATE_YAW_FILT_HZ          AC_PID_FILT_HZ_DEFAULT
 #endif
 
 //////////////////////////////////////////////////////////////////////////////
@@ -742,6 +752,9 @@
 #endif
 #ifndef LOITER_RATE_IMAX
  # define LOITER_RATE_IMAX          1000        // maximum acceleration from I term build-up in cm/s/s
+#endif
+#ifndef LOITER_RATE_FILT_HZ
+ # define LOITER_RATE_FILT_HZ       5.0f
 #endif
 
 //////////////////////////////////////////////////////////////////////////////
@@ -803,6 +816,9 @@
 #endif
 #ifndef THROTTLE_ACCEL_IMAX
  # define THROTTLE_ACCEL_IMAX   800
+#endif
+#ifndef THROTTLE_ACCEL_FILT_HZ
+ # define THROTTLE_ACCEL_FILT_HZ    20.0f
 #endif
 
 // default maximum vertical velocity and acceleration the pilot may request

@@ -540,22 +540,20 @@ public:
         rc_14               (CH_14),
 #endif
 
-        // PID controller	    initial P	            initial I		        initial D               initial imax
-        //----------------------------------------------------------------------------------------------------------
-        pid_rate_roll           (RATE_ROLL_P,           RATE_ROLL_I,            RATE_ROLL_D,            RATE_ROLL_IMAX),
-        pid_rate_pitch          (RATE_PITCH_P,          RATE_PITCH_I,           RATE_PITCH_D,           RATE_PITCH_IMAX),
-        pid_rate_yaw            (RATE_YAW_P,            RATE_YAW_I,             RATE_YAW_D,             RATE_YAW_IMAX),
+        // PID controller	    initial P	      initial I         initial D       initial imax        initial filt hz     pid rate
+        //---------------------------------------------------------------------------------------------------------------------------------
+        pid_rate_roll           (RATE_ROLL_P,     RATE_ROLL_I,      RATE_ROLL_D,    RATE_ROLL_IMAX,     RATE_ROLL_FILT_HZ,  MAIN_LOOP_SECONDS),
+        pid_rate_pitch          (RATE_PITCH_P,    RATE_PITCH_I,     RATE_PITCH_D,   RATE_PITCH_IMAX,    RATE_PITCH_FILT_HZ, MAIN_LOOP_SECONDS),
+        pid_rate_yaw            (RATE_YAW_P,      RATE_YAW_I,       RATE_YAW_D,     RATE_YAW_IMAX,      RATE_YAW_FILT_HZ,   MAIN_LOOP_SECONDS),
 
 #if FRAME_CONFIG ==     TILTROTOR_Y6_FRAME
-        pid_rate_roll_aero      (RATE_ROLL_P_AERO,      RATE_ROLL_I_AERO,       RATE_ROLL_D_AERO,       RATE_ROLL_IMAX_AERO),
-        pid_rate_pit_aero       (RATE_PITCH_P_AERO,     RATE_PITCH_I_AERO,      RATE_PITCH_D_AERO,      RATE_PITCH_IMAX_AERO),
-        pid_rate_yaw_mot        (RATE_YAW_P_MOT,        RATE_YAW_I_MOT,         RATE_YAW_D_MOT,         RATE_YAW_IMAX_MOT),
+        pid_rate_roll_aero      (RATE_ROLL_P_AERO,      RATE_ROLL_I_AERO,       RATE_ROLL_D_AERO,       RATE_ROLL_IMAX_AERO, RATE_ROLL_FILT_HZ,  MAIN_LOOP_SECONDS ),
+        pid_rate_pit_aero       (RATE_PITCH_P_AERO,     RATE_PITCH_I_AERO,      RATE_PITCH_D_AERO,      RATE_PITCH_IMAX_AERO, RATE_PITCH_FILT_HZ, MAIN_LOOP_SECONDS),
+        pid_rate_yaw_mot        (RATE_YAW_P_MOT,        RATE_YAW_I_MOT,         RATE_YAW_D_MOT,         RATE_YAW_IMAX_MOT, RATE_YAW_FILT_HZ,   MAIN_LOOP_SECONDS),
 #endif
-        pid_loiter_rate_lat     (LOITER_RATE_P,         LOITER_RATE_I,          LOITER_RATE_D,          LOITER_RATE_IMAX),
-        pid_loiter_rate_lon     (LOITER_RATE_P,         LOITER_RATE_I,          LOITER_RATE_D,          LOITER_RATE_IMAX),
 
         p_throttle_rate         (THROTTLE_RATE_P),
-        pid_throttle_accel      (THROTTLE_ACCEL_P,      THROTTLE_ACCEL_I,       THROTTLE_ACCEL_D,       THROTTLE_ACCEL_IMAX),
+        pid_throttle_accel      (THROTTLE_ACCEL_P,THROTTLE_ACCEL_I, THROTTLE_ACCEL_D,THROTTLE_ACCEL_IMAX, THROTTLE_ACCEL_FILT_HZ, MAIN_LOOP_SECONDS),
 
 
 
