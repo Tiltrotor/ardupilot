@@ -547,6 +547,9 @@
 #ifndef RATE_ROLL_FILT_HZ
 # define RATE_ROLL_FILT_HZ 20.0f
 #endif
+#ifndef RATE_ROLL_FILT_HZ
+ # define RATE_ROLL_FILT_HZ         20.0f
+#endif
 
 #ifndef RATE_PITCH_P
  # define RATE_PITCH_P       		0.150f
@@ -563,6 +566,10 @@
 #ifndef RATE_PITCH_FILT_HZ
 # define RATE_PITCH_FILT_HZ 20.0f
 #endif
+#ifndef RATE_PITCH_FILT_HZ
+ # define RATE_PITCH_FILT_HZ        20.0f
+#endif
+
 
 #ifndef RATE_YAW_P
  # define RATE_YAW_P              	0.200f
@@ -601,6 +608,9 @@
 #endif
 #ifndef VEL_XY_FILT_HZ
 # define VEL_XY_FILT_HZ 5.0f
+#endif
+#ifndef LOITER_RATE_FILT_HZ
+ # define LOITER_RATE_FILT_HZ       5.0f
 #endif
 #ifndef LOITER_RATE_FILT_HZ
  # define LOITER_RATE_FILT_HZ       5.0f
