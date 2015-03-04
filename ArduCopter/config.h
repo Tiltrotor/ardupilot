@@ -681,6 +681,9 @@
 #ifndef VEL_XY_FILT_HZ
 # define VEL_XY_FILT_HZ 5.0f
 #endif
+#ifndef LOITER_RATE_FILT_HZ
+ # define LOITER_RATE_FILT_HZ       5.0f
+#endif
 
 //////////////////////////////////////////////////////////////////////////////
 // PosHold parameter defaults
