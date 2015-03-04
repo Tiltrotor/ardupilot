@@ -331,6 +331,7 @@ public:
         k_param_pid_rate_pit_aero, // 245 Added for the aerodynamic surface that controls pitch rate on a tiltrotor_y6
         k_param_pid_rate_yaw_mot, //247 Added for the Yaw rate Motor contribution for a Tiltrotor_Y6
         k_param_autotune_axis_bitmask,  // 245
+        k_param_autotune_aggressiveness,  // 246
 
         // 254,255: reserved
     };
@@ -488,6 +489,7 @@ public:
 
     // Autotune
     AP_Int8                 autotune_axis_bitmask;
+    AP_Float                autotune_aggressiveness;
 
     // Note: keep initializers here in the same order as they are declared
     // above.
