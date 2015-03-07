@@ -530,7 +530,7 @@ const AP_Param::Info var_info[] PROGMEM = {
     // @Range: 0 9000
     // @Increment: 1
     // @User: Standard
-    TSCALAR(pitch_limit_max_cd,     "LIM_PITCH_MAX",  25),
+    TSCALAR(pitch_limit_max_cd,     "LIM_PITCH_MAX",  3000),
 
     // @Param: LIM_PITCH_MIN
     // @DisplayName: Minimum Pitch Angle
@@ -539,9 +539,9 @@ const AP_Param::Info var_info[] PROGMEM = {
     // @Range: -9000 0
     // @Increment: 1
     // @User: Standard
-       TSCALAR(pitch_limit_min_cd,     "LIM_PITCH_MIN",  -20),
+       TSCALAR(pitch_limit_min_cd,     "LIM_PITCH_MIN",  -2500),
 
-    
+
     // @Param: THR_MAX
     // @DisplayName: Minimum Throttle
     // @Description: The minimum throttle setting to which the autopilot will apply.
@@ -568,7 +568,7 @@ const AP_Param::Info var_info[] PROGMEM = {
     // @Increment: 1
     // @User: Standard
     TSCALAR(throttle_cruise,        "TRIM_THROTTLE",  45),
-   
+
     // @Param: THR_SLEWRATE
     // @DisplayName: Throttle slew rate
     // @Description: maximum percentage change in throttle per second. A setting of 10 means to not change the throttle by more than 10% of the full throttle range in one second.
@@ -581,6 +581,15 @@ const AP_Param::Info var_info[] PROGMEM = {
     // @Group: ARSPD_
     // @Path: ../libraries/AP_Airspeed/AP_Airspeed.cpp
     GOBJECT(airspeed,                               "ARSPD_",   AP_Airspeed),
+
+       // @Param: LIM_ROLL_CD
+    // @DisplayName: Maximum Bank Angle
+    // @Description: The maximum commanded bank angle in either direction
+    // @Units: centi-Degrees
+    // @Range: 0 9000
+    // @Increment: 1
+    // @User: Standard
+    GSCALAR(roll_limit_cd,          "LIM_ROLL_CD",    4500),
 #endif
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -857,21 +866,21 @@ const AP_Param::Info var_info[] PROGMEM = {
     // @User: Advanced
     GGROUP(pid_loiter_rate_lon,      "LOITER_LON_",  AC_PID),
 
-#if FRAME_CONFIG ==     TILTROTOR_Y6_FRAME    	
+#if FRAME_CONFIG ==     TILTROTOR_Y6_FRAME
 	// @Param: RATE_AR_ROL_P
     // @DisplayName: Aerodynamic Elevon Roll axis rate controller P gain used in a Tiltrotor_Y6 ONLY
     // @Description: Pitch axis rate controller P gain.  Converts the difference between desired pitch rate and actual pitch rate into a servo output
     // @Range: 0.08 0.20
     // @Increment: 0.005
     // @User: Standard
-    
+
     // @Param: RATE_AR_ROL_I
     // @DisplayName: Aerodynamic Elevon Roll axis rate controller I gain used in a Tiltrotor_Y6 ONLY
     // @Description: Roll axis rate controller I gain.  Corrects long-term difference in desired roll rate vs actual roll rate
     // @Range: 0.01 0.5
     // @Increment: 0.01
     // @User: Standard
-    
+
     // @Param: RATE_AR_ROL_IMAX
     // @DisplayName: Aerodynamic Elevon Roll axis rate controller I gain maximum used in a Tiltrotor_Y6 ONLY
     // @Description: Roll axis rate controller I gain maximum.  Constrains the maximum motor output that the I gain will output
@@ -879,7 +888,7 @@ const AP_Param::Info var_info[] PROGMEM = {
     // @Increment: 10
     // @Units: Percent*10
     // @User: Standard
-   
+
     // @Param: RATE_AR_ROL_D
     // @DisplayName: Aerodyamic Elevon Pitch axis rate controller D gain used in a Tiltrotor_Y6 ONLY
     // @Description: Pitch axis rate controller D gain.  Compensates for short-term change in desired pitch rate vs actual pitch rate
@@ -887,21 +896,21 @@ const AP_Param::Info var_info[] PROGMEM = {
     // @Increment: 0.001
     // @User: Standard
     GGROUP(pid_rate_roll_aero,    "RATE_AR_ROL_", AC_PID),
-    
+
     // @Param: RATE_AR_PIT_P
     // @DisplayName: Aerodynamic Elevon Pitch axis rate controller P gain used in a Tiltrotor_Y6 ONLY
     // @Description: Pitch axis rate controller P gain.  Converts the difference between desired pitch rate and actual pitch rate into a servo output
     // @Range: 0.08 0.20
     // @Increment: 0.005
     // @User: Standard
-    
+
     // @Param: RATE_AR_PIT_I
     // @DisplayName: Aerodyamic Elevon Pitch axis rate controller I gain used in a Tiltrotor_Y6 ONLY
     // @Description: Pitch axis rate controller I gain.  Corrects long-term difference in desired pitch rate vs actual pitch rate
     // @Range: 0.01 0.5
     // @Increment: 0.01
     // @User: Standard
-    
+
     // @Param: RATE_AR_PIT_IMAX
     // @DisplayName: Aerodyamic Elevon Pitch axis rate controller I gain maximum used in a Tiltrotor_Y6 ONLY
     // @Description: Pitch axis rate controller I gain maximum.  Constrains the maximum motor output that the I gain will output
@@ -909,7 +918,7 @@ const AP_Param::Info var_info[] PROGMEM = {
     // @Increment: 10
     // @Units: Percent*10
     // @User: Standard
-    
+
     // @Param: RATE_AR_PIT_D
     // @DisplayName: Aerodyamic Elevon Pitch axis rate controller D gain used in a Tiltrotor_Y6 ONLY
     // @Description: Pitch axis rate controller D gain.  Compensates for short-term change in desired pitch rate vs actual pitch rate
@@ -917,21 +926,21 @@ const AP_Param::Info var_info[] PROGMEM = {
     // @Increment: 0.001
     // @User: Standard
     GGROUP(pid_rate_pit_aero,    "RATE_AR_PIT_", AC_PID),
-    
+
     // @Param: RATE_MT_YAW_P
     // @DisplayName: Yaw axis rate controller P gain for the Aft Motor Set used in a Tiltrotor_Y6 ONLY
     // @Description: Yaw axis rate controller P gain.  Converts the difference between desired pitch rate and actual pitch rate into a servo output
     // @Range: 0.08 0.20
     // @Increment: 0.005
     // @User: Standard
-    
+
     // @Param: RATE_MT_YAW_I
     // @DisplayName: Yaw axis rate controller I gain for the Aft Motor Set used in a Tiltrotor_Y6 ONLY
     // @Description: Yaw axis rate controller I gain.  Corrects long-term difference in desired roll rate vs actual roll rate
     // @Range: 0.01 0.5
     // @Increment: 0.01
     // @User: Standard
-    
+
     // @Param: RATE_MT_YAW_IMAX
     // @DisplayName: Yaw axis rate controller D gain for the Aft Motor Set used in a Tiltrotor_Y6 ONLY
     // @Description: Yaw axis rate controller I gain maximum.  Constrains the maximum motor output that the I gain will output
@@ -939,7 +948,7 @@ const AP_Param::Info var_info[] PROGMEM = {
     // @Increment: 10
     // @Units: Percent*10
     // @User: Standard
-   
+
     // @Param: RATE_MT_YAW_D
     // @DisplayName: Yaw axis rate controller D gain for the Aft Motor Set used in a Tiltrotor_Y6 ONLY
     // @Description: Yaw axis rate controller D gain.  Compensates for short-term change in desired pitch rate vs actual pitch rate
@@ -1261,7 +1270,7 @@ const AP_Param::Info var_info[] PROGMEM = {
     // @Group: MOT_
     // @Path: ../libraries/AP_Motors/AP_MotorsCoax.cpp
     GOBJECT(motors, "MOT_",           AP_MotorsCoax),
-    
+
 #elif FRAME_CONFIG == TILTROTOR_Y6_FRAME
     // @Group: SS1_
     // @Path: ../libraries/RC_Channel/RC_Channel.cpp

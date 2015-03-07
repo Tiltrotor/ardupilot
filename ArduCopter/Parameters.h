@@ -191,6 +191,7 @@ public:
          k_param_throttle_min,
          k_param_throttle_cruise, //126
          k_param_throttle_slewrate,
+         k_param_roll_limit_cd,
 
         //
         // 140: Sensor parameters
@@ -360,13 +361,13 @@ public:
     AP_Int16        rtl_alt_final;
 
     AP_Int8         rssi_pin;
-    AP_Float        rssi_range;                 // allows to set max voltage for rssi pin such as 5.0, 3.3 etc. 
+    AP_Float        rssi_range;                 // allows to set max voltage for rssi pin such as 5.0, 3.3 etc.
     AP_Int8         wp_yaw_behavior;            // controls how the autopilot controls yaw during missions
     AP_Int8         rc_feel_rp;                 // controls vehicle response to user input with 0 being extremely soft and 100 begin extremely crisp
 
     AP_Int16        poshold_brake_rate;         // PosHold flight mode's rotation rate during braking in deg/sec
     AP_Int16        poshold_brake_angle_max;    // PosHold flight mode's max lean angle during braking in centi-degrees
-    
+
     // Waypoints
     //
     AP_Int32        rtl_loiter_time;
@@ -578,4 +579,3 @@ public:
 extern const AP_Param::Info        var_info[];
 
 #endif // PARAMETERS_H
-
