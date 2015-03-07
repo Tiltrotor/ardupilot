@@ -1,6 +1,6 @@
 /// -*- tab-width: 4; Mode: C++; c-basic-offset: 4; indent-tabs-mode: nil -*-
 
-#define THISFIRMWARE "ArduCopter V3.2.1- Tiltrotor Y6 V1_7_0"
+#define THISFIRMWARE "ArduCopter V3.2.1- Tiltrotor Y6 V1_8_2"
 /*
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -247,8 +247,8 @@ static const AP_InertialSensor::Sample_rate ins_sample_rate = AP_InertialSensor:
 
 // if your a tiltrotor - scaled roll limit based on pitch
 #if FRAME_CONFIG == TILTROTOR_Y6_FRAME
-static int32_t roll_limit_cd;
-static int32_t pitch_limit_min_cd;
+static int32_t roll_limit_cd = 4500;
+static int32_t pitch_limit_min_cd = -2500;
 #endif
 
 ////////////////////////////////////////////////////////////////////////////////
