@@ -1052,6 +1052,9 @@ static void throttle_loop()
     // check if we've landed
     update_land_detector();
 
+    // update throttle_low_comp value (controls priority of throttle vs attitude control)
+    update_throttle_low_comp();
+
     // check auto_armed status
     update_auto_armed();
 
