@@ -185,6 +185,10 @@ public:
         k_param_serial2_baud_old, // deprecated
         k_param_serial2_protocol, // deprecated
         k_param_serial_manager,  // 119
+        k_param_ch9_option,
+        k_param_ch10_option,
+        k_param_ch11_option,
+        k_param_ch12_option,     // 123
 
 
         // 120: Tiltrotor Vehicle stuff from aparmTR
