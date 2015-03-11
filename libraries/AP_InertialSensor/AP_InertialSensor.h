@@ -277,9 +277,6 @@ private:
     AP_Int8     _accel_filter_cutoff;
     AP_Int8     _gyro_filter_cutoff;
 
-    // was the accel cal done in sensor frame?
-    AP_Int8    _cal_sensor_frame;
-
     // board orientation from AHRS
     enum Rotation _board_orientation;
 
