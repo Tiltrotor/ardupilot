@@ -339,7 +339,6 @@ struct PACKED log_Performance {
     int16_t  pm_test;
     uint8_t i2c_lockup_count;
     uint16_t ins_error_count;
-    uint8_t inav_error_count;
 };
 
 // Write a performance monitoring packet
@@ -352,8 +351,7 @@ static void Log_Write_Performance()
         max_time         : perf_info_get_max_time(),
         pm_test          : pmTest1,
         i2c_lockup_count : hal.i2c->lockup_count(),
-        ins_error_count  : ins.error_count(),
-        inav_error_count : inertial_nav.error_count()
+        ins_error_count  : ins.error_count()
     };
     DataFlash.WriteBlock(&pkt, sizeof(pkt));
 }
