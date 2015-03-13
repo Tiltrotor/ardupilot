@@ -419,7 +419,6 @@ static struct {
     uint8_t rc_override_active  : 1; // 0   // true if rc control are overwritten by ground station
     uint8_t radio               : 1; // 1   // A status flag for the radio failsafe
     uint8_t battery             : 1; // 2   // A status flag for the battery failsafe
-    uint8_t gps                 : 1; // 3   // A status flag for the gps failsafe
     uint8_t gcs                 : 1; // 4   // A status flag for the ground station failsafe
     uint8_t ekf                 : 1; // 5   // true if ekf failsafe has occurred
 
