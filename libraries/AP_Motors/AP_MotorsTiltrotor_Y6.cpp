@@ -61,7 +61,7 @@ const AP_Param::GroupInfo AP_MotorsTiltrotor_Y6::var_info[] PROGMEM = {
     AP_GROUPINFO("SPIN_ARMED", 5, AP_MotorsTiltrotor_Y6, _spin_when_armed, AP_MOTORS_SPIN_WHEN_ARMED),
 
     // @Param: REV_ROLL
-    // @DisplayName: Reverse roll feedback 
+    // @DisplayName: Reverse roll feedback
     // @Description: Ensure the feedback is negative
     // @Values: -1:Opposite direction,1:Same direction
     AP_GROUPINFO("REV_ROLL", 6, AP_MotorsTiltrotor_Y6, _rev_roll, AP_MOTORS_SING_POSITIVE),

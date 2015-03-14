@@ -48,6 +48,7 @@ public:
         AP_Int16 angle_max;
         float tvec_angle_pwm;
         float tvec_angle_deg;
+        float gear_pos_pwm;
     };
 };
 

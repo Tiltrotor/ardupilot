@@ -37,6 +37,10 @@
 #define AC_ATTITUDE_100HZ_DT                            0.0100f // delta time in seconds for 100hz update rate
 #define AC_ATTITUDE_400HZ_DT                            0.0025f // delta time in seconds for 400hz update rate
 
+#define AC_ATTITUDE_RATE_RP_PID_DTERM_FILTER 20 // D-term filter rate cutoff frequency for Roll and Pitch rate controllers
+#define AC_ATTITUDE_RATE_Y_PID_DTERM_FILTER 5 // D-term filter rate cutoff frequency for Yaw rate controller
+
+
 #define AC_ATTITUDE_CONTROL_RATE_BF_FF_DEFAULT          0       // body-frame rate feedforward enabled by default
 
 class AC_AttitudeControl {
@@ -199,7 +203,7 @@ protected:
     struct AttControlFlags {
         uint8_t limit_angle_to_rate_request :   1;  // 1 if the earth frame angle controller is limiting it's maximum rate request
     } _flags;
-    
+
     // update_ef_roll_angle_and_error - update _angle_ef_target.x using an earth frame roll rate request
     void update_ef_roll_angle_and_error(float roll_rate_ef, Vector3f &angle_ef_error, float overshoot_max);
 

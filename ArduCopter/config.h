@@ -163,70 +163,21 @@
   # define RATE_PITCH_D                 0.006f
   # define RATE_YAW_P                   0.150f
   # define RATE_YAW_I                   0.015f
-  # define RATE_ROLL_P_AERO				0.150f
-  # define RATE_ROLL_I_AERO             0.100f
-  # define RATE_ROLL_D_AERO				0.004f
-  # define RATE_ROLL_IMAX_AERO           1000
-  # define RATE_PITCH_P_AERO		    0.150f
-  # define RATE_PITCH_I_AERO            0.100f
-  # define RATE_PITCH_D_AERO	        0.004f
-  # define RATE_PITCH_IMAX_AERO         1000
-  # define RATE_YAW_P_MOT				0.2f
+  # define RATE_ROL_P_AERO			      	0.150f
+  # define RATE_ROL_I_AERO              0.100f
+  # define RATE_ROL_D_AERO			      	0.004f
+  # define RATE_ROL_IMAX_A              1000
+  # define RATE_PIT_P_AERO		          0.150f
+  # define RATE_PIT_I_AERO              0.100f
+  # define RATE_PIT_D_AERO	            0.004f
+  # define RATE_PIT_IMAX_A              1000
+  # define RATE_YAW_P_MOT				        0.2f
   # define RATE_YAW_I_MOT               0.020f
-  # define RATE_YAW_D_MOT				0.000f
-  # define RATE_YAW_IMAX_MOT            1000
+  # define RATE_YAW_D_MOT			      	  0.000f
+  # define RATE_YAW_IMAX_M              1000
   # define AUTOTUNE_ENABLED             DISABLED
 #endif
-/////////////////////////////////////////////////////////////////////////////////
-// Tiltrotor_Y6 defaults
-#if FRAME_CONFIG == TILTROTOR_Y6_FRAME
-  # define WP_YAW_BEHAVIOR_DEFAULT      WP_YAW_BEHAVIOR_LOOK_AHEAD
-  # define RATE_ROLL_P                  0.1f
-  # define RATE_ROLL_D                  0.006f
-  # define RATE_PITCH_P                 0.1f
-  # define RATE_PITCH_D                 0.006f
-  # define RATE_YAW_P                   0.150f
-  # define RATE_YAW_I                   0.015f
-  # define RATE_ROLL_P_AERO				0.150f
-  # define RATE_ROLL_I_AERO             0.100f
-  # define RATE_ROLL_D_AERO				0.004f
-  # define RATE_ROLL_IMAX_AERO           1000
-  # define RATE_PITCH_P_AERO		    0.150f
-  # define RATE_PITCH_I_AERO            0.100f
-  # define RATE_PITCH_D_AERO	        0.004f
-  # define RATE_PITCH_IMAX_AERO         1000
-  # define RATE_YAW_P_MOT				0.2f
-  # define RATE_YAW_I_MOT               0.020f
-  # define RATE_YAW_D_MOT				0.000f
-  # define RATE_YAW_IMAX_MOT            1000
-  # define AUTOTUNE_ENABLED             DISABLED
-#endif
-/////////////////////////////////////////////////////////////////////////////////
-// Tiltrotor_Y6 defaults
-#if FRAME_CONFIG == TILTROTOR_Y6_FRAME
-  # define WP_YAW_BEHAVIOR_DEFAULT      WP_YAW_BEHAVIOR_LOOK_AHEAD
-  # define RATE_ROLL_P                  0.1f
-  # define RATE_ROLL_D                  0.006f
-  # define RATE_PITCH_P                 0.1f
-  # define RATE_PITCH_D                 0.006f
-  # define RATE_YAW_P                   0.150f
-  # define RATE_YAW_I                   0.015f
-  # define RATE_ROLL_P_AERO				0.150f
-  # define RATE_ROLL_I_AERO             0.100f
-  # define RATE_ROLL_D_AERO				0.004f
-  # define RATE_ROLL_IMAX_AERO           1000
-  # define RATE_PITCH_P_AERO		    0.150f
-  # define RATE_PITCH_I_AERO            0.100f
-  # define RATE_PITCH_D_AERO	        0.004f
-  # define RATE_PITCH_IMAX_AERO         1000
-  # define RATE_YAW_P_MOT				0.2f
-  # define RATE_YAW_I_MOT               0.020f
-  # define RATE_YAW_D_MOT				0.000f
-  # define RATE_YAW_IMAX_MOT            1000
-  # define AUTOTUNE_ENABLED             DISABLED
-#endif
-
-//////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 // ADC Enable - used to eliminate for systems which don't have ADC.
 //
 #ifndef CONFIG_ADC
@@ -705,15 +656,23 @@
  # define RATE_YAW_IMAX            	1000
 #endif
 #ifndef RATE_YAW_FILT_HZ
- # define RATE_YAW_FILT_HZ          5.0f
+ # define RATE_YAW_FILT_HZ          AC_PID_FILT_HZ_DEFAULT
 #endif
 
 //////////////////////////////////////////////////////////////////////////////
 // Loiter position control gains
 //
 #ifndef POS_XY_P
- # define POS_XY_P             	1.0f
+# define POS_XY_P 1.0f
 #endif
+//TREVOR REMOVED FOR 3.3
+
+//#ifndef LOITER_RATE_IMAX
+//# define LOITER_RATE_IMAX 1000 // maximum acceleration from I term build-up in cm/s/s
+//#endif
+//#ifndef LOITER_RATE_FILT_HZ
+// # define LOITER_RATE_FILT_HZ 5.0f
+//#endif
 
 //////////////////////////////////////////////////////////////////////////////
 // Velocity (horizontal) gains
@@ -748,6 +707,7 @@
 // Throttle control gains
 //
 
+//Default for throttle_trim (Trevor)
 #ifndef THROTTLE_CRUISE_C
  # define THROTTLE_CRUISE_C       450             // default estimate of throttle required for vehicle to maintain a hover
 #endif
@@ -796,6 +756,15 @@
 #endif
 
 // default maximum vertical velocity and acceleration the pilot may request
+
+//TREVOR REMOVED FOR 3.3
+//#ifndef THROTTLE_ACCEL_IMAX
+//# define THROTTLE_ACCEL_IMAX 800
+//#endif
+//#ifndef THROTTLE_ACCEL_FILT_HZ
+// # define THROTTLE_ACCEL_FILT_HZ 20.0f
+//#endif
+
 #ifndef PILOT_VELZ_MAX
  # define PILOT_VELZ_MAX    250     // maximum vertical velocity in cm/s
 #endif

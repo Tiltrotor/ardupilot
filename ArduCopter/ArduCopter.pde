@@ -481,7 +481,6 @@ static MOTOR_CLASS motors(g.rc_1, g.rc_2, g.rc_3, g.rc_4, g.single_servo_1, g.si
 static MOTOR_CLASS motors(g.rc_1, g.rc_2, g.rc_3, g.rc_4, g.single_servo_1, g.single_servo_2);
 #elif FRAME_CONFIG == TILTROTOR_Y6_FRAME  // single constructor for Tiltrotor_y6
 static MOTOR_CLASS motors(g.rc_1, g.rc_2, g.rc_3, g.rc_4, g.single_servo_1, g.single_servo_2, g.single_servo_3, g.single_servo_4, MAIN_LOOP_RATE); //Copy of Single Frame
-
 #else
 static MOTOR_CLASS motors(g.rc_1, g.rc_2, g.rc_3, g.rc_4, MAIN_LOOP_RATE);
 #endif
@@ -650,7 +649,7 @@ AC_AttitudeControl_Heli attitude_control(ahrs, aparm, motors, g.p_stabilize_roll
                         g.pid_rate_roll, g.pid_rate_pitch, g.pid_rate_yaw);
 #elif FRAME_CONFIG == TILTROTOR_Y6_FRAME
 AC_AttitudeControl_Tiltrotor_Y6 attitude_control(ahrs, aparm, motors, g.p_stabilize_roll, g.p_stabilize_pitch, g.p_stabilize_yaw,
-                        g.pid_rate_roll, g.pid_rate_pitch, g.pid_rate_yaw, g.pid_rate_pit_aero, g.pid_rate_roll_aero, g.pid_rate_yaw_mot, airspeed);                        
+                        g.pid_rate_roll, g.pid_rate_pitch, g.pid_rate_yaw, g.pid_rate_pit_aero, g.pid_rate_roll_aero, g.pid_rate_yaw_mot, airspeed);
 #else
 AC_AttitudeControl attitude_control(ahrs, aparm, motors, g.p_stabilize_roll, g.p_stabilize_pitch, g.p_stabilize_yaw,
                         g.pid_rate_roll, g.pid_rate_pitch, g.pid_rate_yaw);
