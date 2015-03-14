@@ -400,7 +400,7 @@ public:
     AP_Int16        throttle_max_copter;
     AP_Int8         failsafe_throttle;
     AP_Int16        failsafe_throttle_value;
-    AP_Int16        throttle_trim;
+  //  AP_Int16        throttle_trim; //TREVOR REMOVED for 3.3
     AP_Int16        throttle_mid;
     AP_Int16        throttle_deadzone;
 
@@ -442,6 +442,11 @@ public:
 #if FRAME_CONFIG ==     SINGLE_FRAME
     // Single
     RC_Channel      single_servo_1, single_servo_2, single_servo_3, single_servo_4;     // servos for four flaps
+#endif
+
+#if FRAME_CONFIG == COAX_FRAME
+// Coax copter flaps
+RC_Channel single_servo_1, single_servo_2; // servos for two flaps
 #endif
 
 #if FRAME_CONFIG ==     TILTROTOR_Y6_FRAME          //(interm copy of Single Frame)

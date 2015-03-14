@@ -125,7 +125,7 @@ void AC_AttitudeControl_Heli::passthrough_bf_roll_pitch_rate_yaw(float roll_pass
 // rate_controller_run - run lowest level rate controller and send outputs to the motors
 // should be called at 100hz or more
 void AC_AttitudeControl_Heli::rate_controller_run()
-{	
+{
     // call rate controllers and send output to motors object
     // if using a flybar passthrough roll and pitch directly to motors
     if (_flags_heli.flybar_passthrough) {
