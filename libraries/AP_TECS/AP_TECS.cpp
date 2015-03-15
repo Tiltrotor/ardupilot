@@ -2,6 +2,7 @@
 
 #include "AP_TECS.h"
 #include <AP_HAL.h>
+#include <stdio.h>
 
 extern const AP_HAL::HAL& hal;
 
