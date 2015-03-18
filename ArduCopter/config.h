@@ -163,21 +163,22 @@
   # define RATE_PITCH_D                 0.006f
   # define RATE_YAW_P                   0.150f
   # define RATE_YAW_I                   0.015f
-  # define RATE_ROL_P_AERO			      	0.150f
-  # define RATE_ROL_I_AERO              0.100f
-  # define RATE_ROL_D_AERO			      	0.004f
-  # define RATE_ROL_IMAX_A              1000
-  # define RATE_PIT_P_AERO		          0.150f
-  # define RATE_PIT_I_AERO              0.100f
-  # define RATE_PIT_D_AERO	            0.004f
-  # define RATE_PIT_IMAX_A              1000
-  # define RATE_YAW_P_MOT				        0.2f
+  # define RATE_ROLL_P_AERO				0.150f
+  # define RATE_ROLL_I_AERO             0.100f
+  # define RATE_ROLL_D_AERO				0.004f
+  # define RATE_ROLL_IMAX_AERO           1000
+  # define RATE_PITCH_P_AERO		    0.150f
+  # define RATE_PITCH_I_AERO            0.100f
+  # define RATE_PITCH_D_AERO	        0.004f
+  # define RATE_PITCH_IMAX_AERO         1000
+  # define RATE_YAW_P_MOT				0.2f
   # define RATE_YAW_I_MOT               0.020f
-  # define RATE_YAW_D_MOT			      	  0.000f
-  # define RATE_YAW_IMAX_M              1000
+  # define RATE_YAW_D_MOT				0.000f
+  # define RATE_YAW_IMAX_MOT            1000
   # define AUTOTUNE_ENABLED             DISABLED
 #endif
-////////////////////////////////////////////////////////////////////////////////
+
+//////////////////////////////////////////////////////////////////////////////
 // ADC Enable - used to eliminate for systems which don't have ADC.
 //
 #ifndef CONFIG_ADC
@@ -623,7 +624,7 @@
  # define RATE_ROLL_IMAX         	1000
 #endif
 #ifndef RATE_ROLL_FILT_HZ
- # define RATE_ROLL_FILT_HZ         20.0f
+# define RATE_ROLL_FILT_HZ 20.0f
 #endif
 
 #ifndef RATE_PITCH_P
@@ -639,9 +640,8 @@
  # define RATE_PITCH_IMAX        	1000
 #endif
 #ifndef RATE_PITCH_FILT_HZ
- # define RATE_PITCH_FILT_HZ        20.0f
+# define RATE_PITCH_FILT_HZ 20.0f
 #endif
-
 
 #ifndef RATE_YAW_P
  # define RATE_YAW_P              	0.200f
@@ -656,7 +656,7 @@
  # define RATE_YAW_IMAX            	1000
 #endif
 #ifndef RATE_YAW_FILT_HZ
- # define RATE_YAW_FILT_HZ          AC_PID_FILT_HZ_DEFAULT
+# define RATE_YAW_FILT_HZ 5.0f
 #endif
 
 //////////////////////////////////////////////////////////////////////////////
@@ -665,29 +665,21 @@
 #ifndef POS_XY_P
 # define POS_XY_P 1.0f
 #endif
-//TREVOR REMOVED FOR 3.3
-
-//#ifndef LOITER_RATE_IMAX
-//# define LOITER_RATE_IMAX 1000 // maximum acceleration from I term build-up in cm/s/s
-//#endif
-//#ifndef LOITER_RATE_FILT_HZ
-// # define LOITER_RATE_FILT_HZ 5.0f
-//#endif
 
 //////////////////////////////////////////////////////////////////////////////
 // Velocity (horizontal) gains
 //
 #ifndef VEL_XY_P
- # define VEL_XY_P              1.0f
+# define VEL_XY_P 1.0f
 #endif
 #ifndef VEL_XY_I
- # define VEL_XY_I              0.5f
+# define VEL_XY_I 0.5f
 #endif
 #ifndef VEL_XY_IMAX
- # define VEL_XY_IMAX           1000
+# define VEL_XY_IMAX 1000
 #endif
 #ifndef VEL_XY_FILT_HZ
- # define VEL_XY_FILT_HZ        5.0f
+# define VEL_XY_FILT_HZ 5.0f
 #endif
 
 //////////////////////////////////////////////////////////////////////////////
@@ -707,7 +699,6 @@
 // Throttle control gains
 //
 
-//Default for throttle_trim (Trevor)
 #ifndef THROTTLE_CRUISE_C
  # define THROTTLE_CRUISE_C       450             // default estimate of throttle required for vehicle to maintain a hover
 #endif
@@ -735,41 +726,30 @@
 
 // Velocity (vertical) control gains
 #ifndef VEL_Z_P
- # define VEL_Z_P       5.0f
+# define VEL_Z_P 5.0f
 #endif
-
 // Accel (vertical) control gains
 #ifndef ACCEL_Z_P
- # define ACCEL_Z_P     0.50f
+# define ACCEL_Z_P 0.50f
 #endif
 #ifndef ACCEL_Z_I
- # define ACCEL_Z_I     1.00f
+# define ACCEL_Z_I 1.00f
 #endif
 #ifndef ACCEL_Z_D
- # define ACCEL_Z_D     0.0f
+# define ACCEL_Z_D 0.0f
 #endif
 #ifndef ACCEL_Z_IMAX
- # define ACCEL_Z_IMAX  800
+# define ACCEL_Z_IMAX 800
 #endif
 #ifndef ACCEL_Z_FILT_HZ
- # define ACCEL_Z_FILT_HZ   20.0f
+# define ACCEL_Z_FILT_HZ 20.0f
 #endif
-
 // default maximum vertical velocity and acceleration the pilot may request
-
-//TREVOR REMOVED FOR 3.3
-//#ifndef THROTTLE_ACCEL_IMAX
-//# define THROTTLE_ACCEL_IMAX 800
-//#endif
-//#ifndef THROTTLE_ACCEL_FILT_HZ
-// # define THROTTLE_ACCEL_FILT_HZ 20.0f
-//#endif
-
 #ifndef PILOT_VELZ_MAX
- # define PILOT_VELZ_MAX    250     // maximum vertical velocity in cm/s
+# define PILOT_VELZ_MAX 250 // maximum vertical velocity in cm/s
 #endif
 #ifndef PILOT_ACCEL_Z_DEFAULT
- # define PILOT_ACCEL_Z_DEFAULT 250 // vertical acceleration in cm/s/s while altitude is under pilot control
+# define PILOT_ACCEL_Z_DEFAULT 250 // vertical acceleration in cm/s/s while altitude is under pilot control
 #endif
 
 // max distance in cm above or below current location that will be used for the alt target when transitioning to alt-hold mode
@@ -814,9 +794,7 @@
     MASK_LOG_RCOUT | \
     MASK_LOG_OPTFLOW | \
     MASK_LOG_COMPASS | \
-    MASK_LOG_CAMERA | \
-    MASK_LOG_RATE | \
-    MASK_LOG_MOT
+    MASK_LOG_CAMERA
 #endif
 
 //////////////////////////////////////////////////////////////////////////////
