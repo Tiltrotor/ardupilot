@@ -414,8 +414,17 @@ static void Log_Write_Rate()
     DataFlash.WriteBlock(&pkt_rate, sizeof(pkt_rate));
 }
 
+struct PACKED log_MotBatt {
+    LOG_PACKET_HEADER;
+    uint32_t time_ms;
+    float   lift_max;
+    float   bat_volt;
+    float   bat_res;
+    float   th_limit;
+};
+
 // Write an rate packet
-static void Log_Write_Mot()
+static void Log_Write_MotBatt()
 {
 
     struct log_Mot pkt_mot = {
@@ -686,7 +695,7 @@ static void Log_Write_Current() {}
 static void Log_Write_Airspeed(void) {}
 static void Log_Write_Attitude() {}
 static void Log_Write_Rate() {}
-static void Log_Write_Mot() {}
+static void Log_Write_MotBatt() {}
 static void Log_Write_Data(uint8_t id, int16_t value){}
 static void Log_Write_Data(uint8_t id, uint16_t value){}
 static void Log_Write_Data(uint8_t id, int32_t value){}
