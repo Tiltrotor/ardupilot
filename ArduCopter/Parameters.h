@@ -183,22 +183,20 @@ public:
         k_param_gcs2,
         k_param_serial2_baud_old, // deprecated
         k_param_serial2_protocol, // deprecated
-        k_param_serial_manager,  //119
+        k_param_serial_manager,  // 119
 
         // 120: Tiltrotor Vehicle stuff from aparmTR
+         k_param_airspeed_min = 120,
+         k_param_airspeed_max,
+         k_param_airspeed,
+         k_param_pitch_limit_max_cd,
+         k_param_pitch_limit_min_cd,
+         k_param_throttle_max,
+         k_param_throttle_min,
+         k_param_throttle_cruise, //126
+         k_param_throttle_slewrate,
+         k_param_roll_limit_cd, //127
 
-        k_param_airspeed_min = 120,
-        k_param_airspeed_max,
-        k_param_airspeed,
-        k_param_pitch_limit_max_cd,
-        k_param_pitch_limit_min_cd,
-        k_param_throttle_max,
-        k_param_throttle_min,
-        k_param_throttle_cruise, //126
-        k_param_throttle_slewrate,
-        k_param_pid_rate_pit_aero, // Added for the aerodynamic surface that controls pitch rate on a tiltrotor_y6
-        k_param_pid_rate_roll_aero,// Added for the aerodynamic surface that controls roll rate on a tiltrotor_y6
-        k_param_pid_rate_yaw_mot, //130 Added for the Yaw rate Motor contribution for a Tiltrotor_Y6
 
         //
         // 140: Sensor parameters
@@ -264,7 +262,7 @@ public:
         k_param_failsafe_throttle,
         k_param_throttle_fs_action,     // remove
         k_param_failsafe_throttle_value,
-        k_param_throttle_trim,          
+        k_param_throttle_trim,
         k_param_esc_calibrate,
         k_param_radio_tuning,
         k_param_radio_tuning_high,
@@ -330,10 +328,12 @@ public:
         k_param_acro_balance_roll,
         k_param_acro_balance_pitch,
         k_param_acro_yaw_p, // 244
+        k_param_pid_rate_roll_aero,  //246 Added for the aerodynamic surface that controls roll rate on a tiltrotor_y6
+        k_param_pid_rate_pit_aero, // 245 Added for the aerodynamic surface that controls pitch rate on a tiltrotor_y6
+        k_param_pid_rate_yaw_mot, //247 Added for the Yaw rate Motor contribution for a Tiltrotor_Y6
         k_param_autotune_axis_bitmask,  // 245
         k_param_autotune_aggressiveness,  // 246
         k_param_pi_vel_xy,  // 247
-
 
         // 254,255: reserved
     };
@@ -383,7 +383,6 @@ public:
     AP_Int16        throttle_max_copter;
     AP_Int8         failsafe_throttle;
     AP_Int16        failsafe_throttle_value;
-  //  AP_Int16        throttle_trim; //TREVOR REMOVED for 3.3
     AP_Int16        throttle_mid;
     AP_Int16        throttle_deadzone;
 
@@ -422,11 +421,6 @@ public:
 #if FRAME_CONFIG ==     SINGLE_FRAME
     // Single
     RC_Channel      single_servo_1, single_servo_2, single_servo_3, single_servo_4;     // servos for four flaps
-#endif
-
-#if FRAME_CONFIG == COAX_FRAME
-// Coax copter flaps
-RC_Channel single_servo_1, single_servo_2; // servos for two flaps
 #endif
 
 #if FRAME_CONFIG ==     TILTROTOR_Y6_FRAME          //(interm copy of Single Frame)
@@ -487,6 +481,7 @@ RC_Channel single_servo_1, single_servo_2; // servos for two flaps
 
     AC_P                    p_vel_z;
     AC_PID                  pid_accel_z;
+
 
     AC_P                    p_pos_xy;
     AC_P                    p_stabilize_roll;
@@ -565,6 +560,7 @@ RC_Channel single_servo_1, single_servo_2; // servos for two flaps
 
         p_vel_z                 (VEL_Z_P),
         pid_accel_z             (ACCEL_Z_P,       ACCEL_Z_I,        ACCEL_Z_D,      ACCEL_Z_IMAX,       ACCEL_Z_FILT_HZ,    MAIN_LOOP_SECONDS),
+
 
 
         // P controller	        initial P
