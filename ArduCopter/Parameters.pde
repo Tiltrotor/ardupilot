@@ -1140,7 +1140,6 @@ const AP_Param::Info var_info[] PROGMEM = {
     GOBJECT(motors, "MOT_",           AP_MotorsTiltrotor_Y6),
 
 
-
 #else
     // @Group: MOT_
     // @Path: ../libraries/AP_Motors/AP_Motors_Class.cpp
