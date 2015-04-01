@@ -2,7 +2,6 @@
 
 from multicopter import MultiCopter
 from helicopter import HeliCopter
-from iris_ros import IrisRos
 import util, time, os, sys, math
 import socket, struct
 import select, errno
