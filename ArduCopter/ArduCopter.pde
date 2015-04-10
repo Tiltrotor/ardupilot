@@ -103,12 +103,10 @@
 #include <GCS_MAVLink.h>        // MAVLink GCS definitions
 #include <AP_SerialManager.h>   // Serial manager library
 #include <AP_GPS.h>             // ArduPilot GPS library
-#include <AP_GPS_Glitch.h>      // GPS glitch protection library
 #include <DataFlash.h>          // ArduPilot Mega Flash Memory Library
 #include <AP_ADC.h>             // ArduPilot Mega Analog to Digital Converter Library
 #include <AP_ADC_AnalogSource.h>
 #include <AP_Baro.h>
-#include <AP_Baro_Glitch.h>     // Baro glitch protection library
 #include <AP_Compass.h>         // ArduPilot Mega Magnetometer Library
 #include <AP_Math.h>            // ArduPilot Mega Vector/Matrix math Library
 #include <AP_Curve.h>           // Curve used to linearlise throttle pwm to thrust
@@ -269,32 +267,14 @@ static int32_t pitch_limit_min_cd = -2500;
 
 static AP_GPS  gps;
 
-static GPS_Glitch gps_glitch(gps);
+
 
 // flight modes convenience array
 static AP_Int8 *flight_modes = &g.flight_mode1;
 
 static AP_Baro barometer;
 
-static Baro_Glitch baro_glitch(barometer);
-
-#if CONFIG_COMPASS == HAL_COMPASS_PX4
-static AP_Compass_PX4 compass;
-#elif CONFIG_COMPASS == HAL_COMPASS_VRBRAIN
-static AP_Compass_VRBRAIN compass;
-#elif CONFIG_COMPASS == HAL_COMPASS_HMC5843
-static AP_Compass_HMC5843 compass;
-#elif CONFIG_COMPASS == HAL_COMPASS_HIL
-static AP_Compass_HIL compass;
-#elif CONFIG_COMPASS == HAL_COMPASS_AK8963
-static AP_Compass_AK8963_MPU9250 compass;
-#else
- #error Unrecognized CONFIG_COMPASS setting
-#endif
-
-#if CONFIG_HAL_BOARD == HAL_BOARD_APM1
-AP_ADC_ADS7844 apm1_adc;
-#endif
+static Compass compass;
 
 AP_InertialSensor ins;
 
@@ -387,6 +367,10 @@ static union {
         uint8_t new_radio_frame     : 1; // 8       // Set true if we have new PWM data to act on from the Radio
         uint8_t CH7_flag            : 2; // 9,10   // ch7 aux switch : 0 is low or false, 1 is center or true, 2 is high
         uint8_t CH8_flag            : 2; // 11,12   // ch8 aux switch : 0 is low or false, 1 is center or true, 2 is high
+        uint8_t CH9_flag            : 2; // 13,14 // ch9 aux switch : 0 is low or false, 1 is center or true, 2 is high
+        uint8_t CH10_flag           : 2; // 15,16 // ch10 aux switch : 0 is low or false, 1 is center or true, 2 is high
+        uint8_t CH11_flag           : 2; // 17,18 // ch11 aux switch : 0 is low or false, 1 is center or true, 2 is high
+        uint8_t CH12_flag           : 2; // 19,20 // ch12 aux switch : 0 is low or false, 1 is center or true, 2 is high
         uint8_t usb_connected       : 1; // 13      // true if APM is powered from USB connection
         uint8_t rc_receiver_present : 1; // 14  // true if we have an rc receiver present (i.e. if we've ever received an update
         uint8_t compass_mot         : 1; // 15  // true if we are currently performing compassmot calibration
@@ -634,11 +618,7 @@ static float G_Dt = 0.02;
 ////////////////////////////////////////////////////////////////////////////////
 // Inertial Navigation
 ////////////////////////////////////////////////////////////////////////////////
-#if AP_AHRS_NAVEKF_AVAILABLE
-static AP_InertialNav_NavEKF inertial_nav(ahrs, barometer, gps_glitch, baro_glitch);
-#else
-static AP_InertialNav inertial_nav(ahrs, barometer, gps_glitch, baro_glitch);
-#endif
+ static AP_InertialNav_NavEKF inertial_nav(ahrs);
 
 ////////////////////////////////////////////////////////////////////////////////
 // Attitude, Position and Waypoint navigation objects
@@ -803,7 +783,7 @@ static const AP_Scheduler::Task scheduler_tasks[] PROGMEM = {
 #endif
     { update_notify,         8,     10 },
     { one_hz_loop,         400,     42 },
-    { ekf_dcm_check,        40,      2 },
+    { ekf_check,            40,      2 },
     { crash_check,          40,      2 },
     { landinggear_update,   40,      1 },
     { gcs_check_input,	     8,    550 },
@@ -882,7 +862,7 @@ static const AP_Scheduler::Task scheduler_tasks[] PROGMEM = {
 #endif
     { update_notify,         2,     100 },
     { one_hz_loop,         100,     420 },
-    { ekf_dcm_check,        10,      20 },
+    { ekf_check,            10,      20 },
     { crash_check,          10,      20 },
     { landinggear_update,   10,      10 },
     { gcs_check_input,	     2,     550 },
@@ -1103,11 +1083,8 @@ static void ten_hz_logging_loop()
     if (should_log(MASK_LOG_ATTITUDE_MED)) {
         Log_Write_Attitude();
     }
-    if (should_log(MASK_LOG_RATE)) {
-        Log_Write_Rate();
-    }
-    if (should_log(MASK_LOG_MOT)) {
-        Log_Write_Mot();
+    if (should_log(MASK_LOG_MOTBATT)) {
+       Log_Write_MotBatt();
     }
     if (should_log(MASK_LOG_RCIN)) {
         DataFlash.Log_Write_RCIN();
@@ -1209,52 +1186,34 @@ static void one_hz_loop()
 // called at 50hz
 static void update_GPS(void)
 {
-    static uint32_t last_gps_reading[GPS_MAX_INSTANCES];   // time of last gps message
-    bool report_gps_glitch;
-    bool gps_updated = false;
+   static uint32_t last_gps_reading[GPS_MAX_INSTANCES]; // time of last gps message
+   bool gps_updated = false;
 
-    gps.update();
+   gps.update();
 
-    // logging and glitch protection run after every gps message
-    for (uint8_t i=0; i<gps.num_sensors(); i++) {
-        if (gps.last_message_time_ms(i) != last_gps_reading[i]) {
-            last_gps_reading[i] = gps.last_message_time_ms(i);
+    // log after every gps message
+   for (uint8_t i=0; i<gps.num_sensors(); i++) {
+   if (gps.last_message_time_ms(i) != last_gps_reading[i]) {
+   last_gps_reading[i] = gps.last_message_time_ms(i);
 
-            // log GPS message
-            if (should_log(MASK_LOG_GPS)) {
-                DataFlash.Log_Write_GPS(gps, i, current_loc.alt);
-            }
+   // log GPS message
+   if (should_log(MASK_LOG_GPS)) {
+       DataFlash.Log_Write_GPS(gps, i, current_loc.alt);
 
-            gps_updated = true;
-        }
     }
+    gps_updated = true;
+    }
+   }
 
-    if (gps_updated) {
-        // run glitch protection and update AP_Notify if home has been initialised
-        if (home_is_set()) {
-            gps_glitch.check_position();
-            report_gps_glitch = (gps_glitch.glitching() && !ap.usb_connected && hal.util->safety_switch_state() != AP_HAL::Util::SAFETY_DISARMED);
-            if (AP_Notify::flags.gps_glitching != report_gps_glitch) {
-                if (gps_glitch.glitching()) {
-                    Log_Write_Error(ERROR_SUBSYSTEM_GPS, ERROR_CODE_GPS_GLITCH);
-                }else{
-                    Log_Write_Error(ERROR_SUBSYSTEM_GPS, ERROR_CODE_ERROR_RESOLVED);
-                }
-                AP_Notify::flags.gps_glitching = report_gps_glitch;
-            }
-        }
+   if (gps_updated) {
+   // set system time if necessary
+   set_system_time_from_GPS();
 
-        // set system time if necessary
-        set_system_time_from_GPS();
+   // check gps base position (used for RTK only)
+   check_gps_base_pos();
 
-        // update home from GPS location if necessary
-        update_home_from_GPS();
-
-        // check gps base position (used for RTK only)
-        check_gps_base_pos();
-
-        // checks to initialise home and take location based pictures
-        if (gps.status() >= AP_GPS::GPS_OK_FIX_3D) {
+   // checks to initialise home and take location based pictures
+   if (gps.status() >= AP_GPS::GPS_OK_FIX_3D) {
 
 #if CAMERA == ENABLED
             if (camera.update_location(current_loc) == true) {
@@ -1263,9 +1222,6 @@ static void update_GPS(void)
 #endif
         }
     }
-
-    // check for loss of gps
-    failsafe_gps_check();
 }
 
 /*
