@@ -142,11 +142,11 @@
   # define RATE_ROLL_P_AERO				0.150f
   # define RATE_ROLL_I_AERO             0.100f
   # define RATE_ROLL_D_AERO				0.004f
-  # define RATE_ROLL_IMAX_AERO           1000
+  # define RATE_ROLL_IMAX_A           1000
   # define RATE_PITCH_P_AERO		    0.150f
   # define RATE_PITCH_I_AERO            0.100f
   # define RATE_PITCH_D_AERO	        0.004f
-  # define RATE_PITCH_IMAX_AERO         1000
+  # define RATE_PITCH_IMAX_A         1000
   # define RATE_YAW_P_MOT				0.2f
   # define RATE_YAW_I_MOT               0.020f
   # define RATE_YAW_D_MOT				0.000f
