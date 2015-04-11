@@ -245,13 +245,14 @@ const AP_Param::Info var_info[] PROGMEM = {
     // @User: Standard
     GSCALAR(failsafe_throttle_value, "FS_THR_VALUE",      FS_THR_VALUE_DEFAULT),
 
+//Removed Trevor for 3.3 Rebase
     // @Param: TRIM_THROTTLE_C
     // @DisplayName: Throttle Trim
     // @Description: The autopilot's estimate of the throttle required to maintain a level hover.  Calculated automatically from the pilot's throttle input while in stabilize mode
     // @Range: 0 1000
     // @Units: Percent*10
     // @User: Advanced
-    GSCALAR(throttle_cruise_cruise,        "TRIM_THROTTLE_C",    THROTTLE_CRUISE_C),
+    // GSCALAR(throttle_cruise_copter,        "TRIM_THROTTLE_C",    THROTTLE_CRUISE_C),
 
     // @Param: THR_MID
     // @DisplayName: Throttle Mid Position
@@ -459,12 +460,6 @@ const AP_Param::Info var_info[] PROGMEM = {
     // @User: Advanced
     GSCALAR(ekfcheck_thresh, "EKF_CHECK_THRESH",    EKFCHECK_THRESHOLD_DEFAULT),
 
-    // @Param: DCM_CHECK_THRESH
-    // @DisplayName: DCM yaw error threshold
-    // @Description: Allows setting the maximum acceptable yaw error as a sin of the yaw error (0 to disable check)
-    // @Values: 0:Disabled, 0.8:Default, 0.98:Relaxed
-    // @User: Advanced
-    GSCALAR(dcmcheck_thresh, "DCM_CHECK_THRESH",    DCMCHECK_THRESHOLD_DEFAULT),
 
 #if FRAME_CONFIG ==     HELI_FRAME
     // @Group: HS1_
@@ -930,7 +925,7 @@ const AP_Param::Info var_info[] PROGMEM = {
 
     GGROUP(p_alt_hold,     "THR_ALT_", AC_P),
 
-    
+
 
     // variables not in the g class which contain EEPROM saved variables
 

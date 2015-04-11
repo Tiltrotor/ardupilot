@@ -393,6 +393,19 @@ static void Log_Write_Attitude()
 #endif
 }
 
+struct PACKED log_Rate {
+   LOG_PACKET_HEADER;
+   uint32_t time_ms;
+   float control_roll;
+   float roll;
+   float roll_out;
+   float control_pitch;
+   float pitch;
+   float pitch_out;
+   float control_yaw;
+   float yaw;
+   float yaw_out;
+};
 
 // Write an rate packet
 static void Log_Write_Rate()
@@ -426,16 +439,15 @@ struct PACKED log_MotBatt {
 // Write an rate packet
 static void Log_Write_MotBatt()
 {
-
-    struct log_Mot pkt_mot = {
-        LOG_PACKET_HEADER_INIT(LOG_MOT_MSG),
-        time_ms         : hal.scheduler->millis(),
-        lift_max        : (float)(motors.get_lift_max()),
-        bat_volt        : (float)(motors.get_batt_voltage_filt()),
-        bat_res         : (float)(motors.get_batt_resistance()),
-        th_limit        : (float)(motors.get_throttle_limit())
-    };
-    DataFlash.WriteBlock(&pkt_mot, sizeof(pkt_mot));
+   struct log_MotBatt pkt_mot = {
+     LOG_PACKET_HEADER_INIT(LOG_MOTBATT_MSG),
+     time_ms : hal.scheduler->millis(),
+     lift_max : (float)(motors.get_lift_max()),
+     bat_volt : (float)(motors.get_batt_voltage_filt()),
+     bat_res : (float)(motors.get_batt_resistance()),
+     th_limit : (float)(motors.get_throttle_limit())
+};
+DataFlash.WriteBlock(&pkt_mot, sizeof(pkt_mot));
 }
 
 
@@ -617,8 +629,8 @@ static const struct LogStructure log_structure[] PROGMEM = {
       "PM",  "HHIhBHB",    "NLon,NLoop,MaxT,PMT,I2CErr,INSErr,INAVErr" },
     { LOG_RATE_MSG, sizeof(log_Rate),
       "RATE", "Ifffffffff",  "TimeMS,RllDes,Rll,RllOut,PitDes,Pit,PitOut,YawDes,Yaw,YawOut" },
-    { LOG_MOT_MSG, sizeof(log_Mot),
-      "MOT", "Iffff",  "TimeMS,LiftMax,BatVolt,BatRes,ThLimit" },
+    { LOG_MOTBATT_MSG, sizeof(log_MotBatt),
+      "MOTB", "Iffff", "TimeMS,LiftMax,BatVolt,BatRes,ThLimit" },
     { LOG_STARTUP_MSG, sizeof(log_Startup),
       "STRT", "",            "" },
     { LOG_EVENT_MSG, sizeof(log_Event),
