@@ -393,6 +393,19 @@ static void Log_Write_Attitude()
 #endif
 }
 
+struct PACKED log_Rate {
+   LOG_PACKET_HEADER;
+   uint32_t time_ms;
+   float control_roll;
+   float roll;
+   float roll_out;
+   float control_pitch;
+   float pitch;
+   float pitch_out;
+   float control_yaw;
+   float yaw;
+   float yaw_out;
+};
 
 struct PACKED log_Rate {
    LOG_PACKET_HEADER;

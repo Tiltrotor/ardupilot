@@ -340,9 +340,6 @@ public:
         k_param_acro_balance_roll,
         k_param_acro_balance_pitch,
         k_param_acro_yaw_p, // 244
-        k_param_pid_rate_roll_aero,  //246 Added for the aerodynamic surface that controls roll rate on a tiltrotor_y6
-        k_param_pid_rate_pit_aero, // 245 Added for the aerodynamic surface that controls pitch rate on a tiltrotor_y6
-        k_param_pid_rate_yaw_mot, //247 Added for the Yaw rate Motor contribution for a Tiltrotor_Y6
         k_param_autotune_axis_bitmask,  // 245
         k_param_autotune_aggressiveness,  // 246
         k_param_pi_vel_xy,  // 247
