@@ -263,8 +263,6 @@ static int32_t pitch_limit_min_cd = -2500;
 
 static AP_GPS  gps;
 
-
-
 // flight modes convenience array
 static AP_Int8 *flight_modes = &g.flight_mode1;
 
@@ -354,29 +352,29 @@ AP_Airspeed airspeed(aparmTR);
 static union {
     struct {
         uint8_t unused1             : 1; // 0
-        uint8_t simple_mode         : 2; // 1,2 // This is the state of simple mode : 0 = disabled ; 1 = SIMPLE ; 2 = SUPERSIMPLE
-        uint8_t pre_arm_rc_check    : 1; // 3   // true if rc input pre-arm checks have been completed successfully
-        uint8_t pre_arm_check       : 1; // 4   // true if all pre-arm checks (rc, accel calibration, gps lock) have been performed
-        uint8_t auto_armed          : 1; // 5   // stops auto missions from beginning until throttle is raised
-        uint8_t logging_started     : 1; // 6   // true if dataflash logging has started
-        uint8_t land_complete       : 1; // 7   // true if we have detected a landing
+        uint8_t simple_mode         : 2; // 1,2     // This is the state of simple mode : 0 = disabled ; 1 = SIMPLE ; 2 = SUPERSIMPLE
+        uint8_t pre_arm_rc_check    : 1; // 3       // true if rc input pre-arm checks have been completed successfully
+        uint8_t pre_arm_check       : 1; // 4       // true if all pre-arm checks (rc, accel calibration, gps lock) have been performed
+        uint8_t auto_armed          : 1; // 5       // stops auto missions from beginning until throttle is raised
+        uint8_t logging_started     : 1; // 6       // true if dataflash logging has started
+        uint8_t land_complete       : 1; // 7       // true if we have detected a landing
         uint8_t new_radio_frame     : 1; // 8       // Set true if we have new PWM data to act on from the Radio
-        uint8_t CH7_flag            : 2; // 9,10   // ch7 aux switch : 0 is low or false, 1 is center or true, 2 is high
+        uint8_t CH7_flag            : 2; // 9,10    // ch7 aux switch : 0 is low or false, 1 is center or true, 2 is high
         uint8_t CH8_flag            : 2; // 11,12   // ch8 aux switch : 0 is low or false, 1 is center or true, 2 is high
-        uint8_t CH9_flag            : 2; // 13,14 // ch9 aux switch : 0 is low or false, 1 is center or true, 2 is high
-        uint8_t CH10_flag           : 2; // 15,16 // ch10 aux switch : 0 is low or false, 1 is center or true, 2 is high
-        uint8_t CH11_flag           : 2; // 17,18 // ch11 aux switch : 0 is low or false, 1 is center or true, 2 is high
-        uint8_t CH12_flag           : 2; // 19,20 // ch12 aux switch : 0 is low or false, 1 is center or true, 2 is high
-        uint8_t usb_connected       : 1; // 13      // true if APM is powered from USB connection
-        uint8_t rc_receiver_present : 1; // 14  // true if we have an rc receiver present (i.e. if we've ever received an update
-        uint8_t compass_mot         : 1; // 15  // true if we are currently performing compassmot calibration
-        uint8_t motor_test          : 1; // 16  // true if we are currently performing the motors test
-        uint8_t initialised         : 1; // 17  // true once the init_ardupilot function has completed.  Extended status to GCS is not sent until this completes
-        uint8_t land_complete_maybe : 1; // 18  // true if we may have landed (less strict version of land_complete)
-        uint8_t throttle_zero       : 1; // 19  // true if the throttle stick is at zero, debounced
-        uint8_t system_time_set     : 1; // 20  // true if the system time has been set from the GPS
-        uint8_t gps_base_pos_set    : 1; // 21  // true when the gps base position has been set (used for RTK gps only)
-        enum HomeState home_state   : 2; // 22,23 - home status (unset, set, locked)
+        uint8_t CH9_flag            : 2; // 13,14   // ch9 aux switch : 0 is low or false, 1 is center or true, 2 is high
+        uint8_t CH10_flag           : 2; // 15,16   // ch10 aux switch : 0 is low or false, 1 is center or true, 2 is high
+        uint8_t CH11_flag           : 2; // 17,18   // ch11 aux switch : 0 is low or false, 1 is center or true, 2 is high
+        uint8_t CH12_flag           : 2; // 19,20   // ch12 aux switch : 0 is low or false, 1 is center or true, 2 is high
+        uint8_t usb_connected       : 1; // 21      // true if APM is powered from USB connection
+        uint8_t rc_receiver_present : 1; // 22      // true if we have an rc receiver present (i.e. if we've ever received an update
+        uint8_t compass_mot         : 1; // 23      // true if we are currently performing compassmot calibration
+        uint8_t motor_test          : 1; // 24      // true if we are currently performing the motors test
+        uint8_t initialised         : 1; // 25      // true once the init_ardupilot function has completed.  Extended status to GCS is not sent until this completes
+        uint8_t land_complete_maybe : 1; // 26      // true if we may have landed (less strict version of land_complete)
+        uint8_t throttle_zero       : 1; // 27      // true if the throttle stick is at zero, debounced
+        uint8_t system_time_set     : 1; // 28      // true if the system time has been set from the GPS
+        uint8_t gps_base_pos_set    : 1; // 29      // true when the gps base position has been set (used for RTK gps only)
+        enum HomeState home_state   : 2; // 30,31   // home status (unset, set, locked)
     };
     uint32_t value;
 } ap;
@@ -565,11 +563,11 @@ static AP_Frsky_Telem frsky_telemetry(ahrs, battery);
 static int16_t climb_rate;
 // The altitude as reported by Sonar in cm - Values are 20 to 700 generally.
 static int16_t sonar_alt;
-static uint8_t sonar_alt_health;    // true if we can trust the altitude from the sonar
+static uint8_t sonar_alt_health;   // true if we can trust the altitude from the sonar
 static float target_sonar_alt;      // desired altitude in cm above the ground
 static int32_t baro_alt;            // barometer altitude in cm above home
 static float baro_climbrate;        // barometer climbrate in cm/s
-static LowPassFilterVector3f land_accel_ef_filter(LAND_DETECTOR_ACCEL_LPF_CUTOFF); // accelerations for land detector test
+static LowPassFilterVector3f land_accel_ef_filter(LAND_DETECTOR_ACCEL_LPF_CUTOFF);       //
 
 ////////////////////////////////////////////////////////////////////////////////
 // 3D Location vectors
@@ -613,7 +611,7 @@ static float G_Dt = 0.02;
 ////////////////////////////////////////////////////////////////////////////////
 // Inertial Navigation
 ////////////////////////////////////////////////////////////////////////////////
- static AP_InertialNav_NavEKF inertial_nav(ahrs);
+static AP_InertialNav_NavEKF inertial_nav(ahrs);
 
 ////////////////////////////////////////////////////////////////////////////////
 // Attitude, Position and Waypoint navigation objects
@@ -1005,12 +1003,6 @@ static void fast_loop()
 
     // run the attitude controllers
     update_flight_mode();
-
-    // update home from EKF if necessary
-    update_home_from_EKF();
-
-    // check if we've landed
-    update_land_detector();
 }
 
 // rc_loops - reads user input from transmitter/receiver
@@ -1029,6 +1021,9 @@ static void throttle_loop()
 {
     // get altitude and climb rate from inertial lib
     read_inertial_altitude();
+
+    // check if we've landed
+    update_land_detector();
 
     // update throttle_low_comp value (controls priority of throttle vs attitude control)
     update_throttle_low_comp();
@@ -1083,9 +1078,10 @@ static void ten_hz_logging_loop()
 {
     if (should_log(MASK_LOG_ATTITUDE_MED)) {
         Log_Write_Attitude();
+        Log_Write_Rate();
     }
     if (should_log(MASK_LOG_MOTBATT)) {
-       Log_Write_MotBatt();
+        Log_Write_MotBatt();
     }
     if (should_log(MASK_LOG_RATE)) {
         Log_Write_Rate();
@@ -1116,6 +1112,7 @@ static void fifty_hz_logging_loop()
 #if HIL_MODE == HIL_MODE_DISABLED
     if (should_log(MASK_LOG_ATTITUDE_FAST)) {
         Log_Write_Attitude();
+        Log_Write_Rate();
     }
 
     if (should_log(MASK_LOG_IMU)) {
@@ -1202,34 +1199,34 @@ static void one_hz_loop()
 // called at 50hz
 static void update_GPS(void)
 {
-   static uint32_t last_gps_reading[GPS_MAX_INSTANCES]; // time of last gps message
-   bool gps_updated = false;
+    static uint32_t last_gps_reading[GPS_MAX_INSTANCES];   // time of last gps message
+    bool gps_updated = false;
 
-   gps.update();
+    gps.update();
 
     // log after every gps message
-   for (uint8_t i=0; i<gps.num_sensors(); i++) {
-   if (gps.last_message_time_ms(i) != last_gps_reading[i]) {
-   last_gps_reading[i] = gps.last_message_time_ms(i);
+    for (uint8_t i=0; i<gps.num_sensors(); i++) {
+        if (gps.last_message_time_ms(i) != last_gps_reading[i]) {
+            last_gps_reading[i] = gps.last_message_time_ms(i);
 
-   // log GPS message
-   if (should_log(MASK_LOG_GPS)) {
-       DataFlash.Log_Write_GPS(gps, i, current_loc.alt);
+            // log GPS message
+            if (should_log(MASK_LOG_GPS)) {
+                DataFlash.Log_Write_GPS(gps, i, current_loc.alt);
+            }
 
+            gps_updated = true;
+        }
     }
-    gps_updated = true;
-    }
-   }
 
-   if (gps_updated) {
-   // set system time if necessary
-   set_system_time_from_GPS();
+    if (gps_updated) {
+        // set system time if necessary
+        set_system_time_from_GPS();
 
-   // check gps base position (used for RTK only)
-   check_gps_base_pos();
+        // check gps base position (used for RTK only)
+        check_gps_base_pos();
 
-   // checks to initialise home and take location based pictures
-   if (gps.status() >= AP_GPS::GPS_OK_FIX_3D) {
+        // checks to initialise home and take location based pictures
+        if (gps.status() >= AP_GPS::GPS_OK_FIX_3D) {
 
 #if CAMERA == ENABLED
             if (camera.update_location(current_loc) == true) {

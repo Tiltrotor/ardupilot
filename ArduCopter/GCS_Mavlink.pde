@@ -379,10 +379,10 @@ static void NOINLINE send_radio_out(mavlink_channel_t chan)
         hal.rcout->read(6),
         hal.rcout->read(7));
 }
-
+#if FRAME_CONFIG == TILTROTOR_Y6_FRAME
 static void NOINLINE send_vfr_hud(mavlink_channel_t chan)
 {
-   //***Need to make this tiltrotor specific*** 
+
     float aspeed;
     if (airspeed.enabled()) {
         aspeed = airspeed.get_airspeed();
@@ -398,6 +398,20 @@ static void NOINLINE send_vfr_hud(mavlink_channel_t chan)
         current_loc.alt / 100.0f,
         climb_rate / 100.0f);
 }
+#else
+static void NOINLINE send_vfr_hud(mavlink_channel_t chan)
+{
+
+    mavlink_msg_vfr_hud_send(
+        chan,
+        gps.ground_speed(),      // WAS-- aspeed,
+        gps.ground_speed(),
+        (ahrs.yaw_sensor / 100) % 360,
+        g.rc_3.servo_out/10,
+        current_loc.alt / 100.0f,
+        climb_rate / 100.0f);
+}
+#endif
 
 static void NOINLINE send_current_waypoint(mavlink_channel_t chan)
 {
@@ -620,7 +634,7 @@ bool GCS_MAVLINK::try_send_message(enum ap_message id)
 
     case MSG_MOUNT_STATUS:
 #if MOUNT == ENABLED
-        CHECK_PAYLOAD_SIZE(MOUNT_STATUS);    
+        CHECK_PAYLOAD_SIZE(MOUNT_STATUS);
         camera_mount.status_msg(chan);
 #endif // MOUNT == ENABLED
         break;

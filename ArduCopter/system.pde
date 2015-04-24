@@ -304,15 +304,19 @@ static void startup_ground(bool force_gyro_cal)
     // set landed flag
     set_land_complete(true);
     set_land_complete_maybe(true);
+
+
+#if FRAME_CONFIG == TILTROTOR_Y6_FRAME
     if (airspeed.enabled()) {
-        // initialize airspeed sensor
+        initialize airspeed sensor
         // --------------------------
         zero_airspeed(true);
-    } else {
+   } else {
         gcs_send_text_P(SEVERITY_LOW,PSTR("NO airspeed"));
     }
-
+#endif
 }
+
 
 // position_ok - returns true if the horizontal absolute position is ok and home position is set
 static bool position_ok()
