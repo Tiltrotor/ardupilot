@@ -702,8 +702,6 @@ private:
 
     bool haveDeltaAngles;
 
-    bool haveDeltaAngles;
-
     // states held by optical flow fusion across time steps
     // optical flow X,Y motion compensated rate measurements are fused across two time steps
     // to level computational load as this can be an expensive operation
@@ -763,7 +761,7 @@ private:
     perf_counter_t  _perf_OpticalFlowEKF;
     perf_counter_t  _perf_FuseOptFlow;
 #endif
-    
+
     // should we assume zero sideslip?
     bool assume_zero_sideslip(void) const;
 };
