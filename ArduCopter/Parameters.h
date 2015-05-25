@@ -186,11 +186,6 @@ public:
         k_param_serial2_baud_old, // deprecated
         k_param_serial2_protocol, // deprecated
         k_param_serial_manager,  // 119
-        k_param_ch9_option,
-        k_param_ch10_option,
-        k_param_ch11_option,
-        k_param_ch12_option,     // 123
-
 
         // 120: Tiltrotor Vehicle stuff from aparmTR
          k_param_airspeed_min = 120,
@@ -203,7 +198,7 @@ public:
          k_param_throttle_cruise, //126
          k_param_throttle_slewrate,
          k_param_roll_limit_cd, //127
-         ////Changel Options Interfered with Tiltrotor Vehicle during 3.3 Rebase-Trevor Added here
+         ////Changel Options 9-12 Interfered with Tiltrotor Vehicle during 3.3 Rebase-Trevor Added here
          k_param_ch9_option,
          k_param_ch10_option,
          k_param_ch11_option,
