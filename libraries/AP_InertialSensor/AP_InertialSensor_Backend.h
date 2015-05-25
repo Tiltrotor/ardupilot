@@ -33,20 +33,20 @@ public:
     // override with a custom destructor if need be.
     virtual ~AP_InertialSensor_Backend(void) {}
 
-    /* 
+    /*
      * Update the sensor data. Called by the frontend to transfer
      * accumulated sensor readings to the frontend structure via the
      * _publish_gyro() and _publish_accel() functions
      */
     virtual bool update() = 0;
 
-    /* 
+    /*
      * return true if at least one accel sample is available in the backend
      * since the last call to update()
      */
     virtual bool accel_sample_available() = 0;
 
-    /* 
+    /*
      * return true if at least one gyro sample is available in the backend
      * since the last call to update()
      */
@@ -93,9 +93,7 @@ protected:
 
     // return the requested sample rate in Hz
     uint16_t get_sample_rate_hz(void) const;
-
-    // return the requested sample rate in Hz
-    uint16_t get_sample_rate_hz(void) const;
+    
 
     // note that each backend is also expected to have a static detect()
     // function which instantiates an instance of the backend sensor

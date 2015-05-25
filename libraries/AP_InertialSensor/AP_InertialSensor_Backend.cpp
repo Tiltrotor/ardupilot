@@ -9,7 +9,7 @@ AP_InertialSensor_Backend::AP_InertialSensor_Backend(AP_InertialSensor &imu) :
     _product_id(AP_PRODUCT_ID_NONE)
 {}
 
-void AP_InertialSensor_Backend::_rotate_and_correct_accel(uint8_t instance, Vector3f &accel) 
+void AP_InertialSensor_Backend::_rotate_and_correct_accel(uint8_t instance, Vector3f &accel)
 {
     /*
       accel calibration is always done in sensor frame with this
@@ -30,7 +30,7 @@ void AP_InertialSensor_Backend::_rotate_and_correct_accel(uint8_t instance, Vect
     accel.rotate(_imu._board_orientation);
 }
 
-void AP_InertialSensor_Backend::_rotate_and_correct_gyro(uint8_t instance, Vector3f &gyro) 
+void AP_InertialSensor_Backend::_rotate_and_correct_gyro(uint8_t instance, Vector3f &gyro)
 {
     // gyro calibration is always assumed to have been done in sensor frame
     gyro -= _imu._gyro_offset[instance];
@@ -103,11 +103,4 @@ uint16_t AP_InertialSensor_Backend::get_sample_rate_hz(void) const
 void AP_InertialSensor_Backend::_publish_temperature(uint8_t instance, float temperature)
 {
     _imu._temperature[instance] = temperature;
-}
-
-// return the requested sample rate in Hz
-uint16_t AP_InertialSensor_Backend::get_sample_rate_hz(void) const
-{
-    // enum can be directly cast to Hz
-    return (uint16_t)_imu._sample_rate;
 }
