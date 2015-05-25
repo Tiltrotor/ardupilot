@@ -127,11 +127,11 @@ AP_Motors::AP_Motors(RC_Channel& rc_roll, RC_Channel& rc_pitch, RC_Channel& rc_t
     _flags.slow_start_low_end = true;
 
     // setup battery voltage filtering
-    _batt_voltage_filt.set_cutoff_frequency(1.0f/_loop_rate,AP_MOTORS_BATT_VOLT_FILT_HZ);
+    _batt_voltage_filt.set_cutoff_frequency(AP_MOTORS_BATT_VOLT_FILT_HZ);
     _batt_voltage_filt.reset(1.0f);
 
     // setup throttle filtering
-    _throttle_filter.set_cutoff_frequency(1.0f/_loop_rate,0.0f);
+    _throttle_filter.set_cutoff_frequency(0.0f);
     _throttle_filter.reset(0.0f);
 };
 
@@ -188,10 +188,13 @@ void AP_Motors::output()
     // move throttle_low_comp towards desired throttle low comp
     update_throttle_low_comp();
 
-    // output to motors
-    if (_flags.armed ) {
-        output_armed();
-    }else{
+    if (_flags.armed) {
+        if (_flags.stabilizing) {
+            output_armed_stabilizing();
+        } else {
+            output_armed_not_stabilizing();
+        }
+    } else {
         output_disarmed();
     }
 };
@@ -210,12 +213,8 @@ void AP_Motors::slow_start(bool true_false)
 // update the throttle input filter
 void AP_Motors::update_throttle_filter()
 {
-    if (_throttle_filter.get_cutoff_frequency() != _throttle_filt_hz) {
-        _throttle_filter.set_cutoff_frequency(1.0f/_loop_rate,_throttle_filt_hz);
-    }
-
-    if (_flags.armed) {
-        _throttle_filter.apply(_throttle_in);
+    if (armed()) {
+        _throttle_filter.apply(_throttle_in, 1.0f/_loop_rate);
     } else {
         _throttle_filter.reset(0.0f);
     }
@@ -316,7 +315,7 @@ void AP_Motors::update_lift_max_from_batt_voltage()
     batt_voltage = constrain_float(batt_voltage, _batt_voltage_min, _batt_voltage_max);
 
     // filter at 0.5 Hz
-    float bvf = _batt_voltage_filt.apply(batt_voltage/_batt_voltage_max);
+    float bvf = _batt_voltage_filt.apply(batt_voltage/_batt_voltage_max, 1.0f/_loop_rate);
 
     // calculate lift max
     _lift_max = bvf*(1-_thrust_curve_expo) + _thrust_curve_expo*bvf*bvf;
@@ -359,35 +358,12 @@ void AP_Motors::update_throttle_low_comp()
     _throttle_low_comp = constrain_float(_throttle_low_comp, 0.1f, 1.0f);
 }
 
-// apply_thrust_curve_and_volt_scaling - returns throttle curve adjusted pwm value (i.e. 1000 ~ 2000)
-int16_t AP_Motors::apply_thrust_curve_and_volt_scaling(int16_t pwm_out, int16_t pwm_min, int16_t pwm_max) const
+float AP_Motors::rel_pwm_to_thr_range(float pwm) const
 {
-    float temp_out = ((float)(pwm_out-pwm_min))/((float)(pwm_max-pwm_min));
-    if (_thrust_curve_expo > 0.0f){
-        temp_out = ((_thrust_curve_expo-1.0f) + safe_sqrt((1.0f-_thrust_curve_expo)*(1.0f-_thrust_curve_expo) + 4.0f*_thrust_curve_expo*_lift_max*temp_out))/(2.0f*_thrust_curve_expo*_batt_voltage_filt);
-    }
-    return (temp_out*(_thrust_curve_max*pwm_max-pwm_min)+pwm_min);
+    return 1000.0f*pwm/(_rc_throttle.radio_max-_rc_throttle.radio_min);
 }
 
-// update_lift_max from battery voltage - used for voltage compensation
-void AP_Motors::update_lift_max_from_batt_voltage()
+float AP_Motors::thr_range_to_rel_pwm(float thr) const
 {
-    // sanity check battery_voltage_min is not too small
-    _batt_voltage_min = max(_batt_voltage_min, _batt_voltage_max * 0.6f);
-
-    // if disabled or misconfigured exit immediately
-    if(_batt_voltage_max <= 0 && _batt_voltage_min >= _batt_voltage_max) {
-        _batt_voltage_filt = 1.0f;
-        _lift_max = 1.0f;
-        return;
-    }
-
-    // add current based voltage sag to battery voltage
-    float batt_voltage = _batt_voltage + _batt_current * _batt_resistance;
-    batt_voltage = constrain_float(batt_voltage, _batt_voltage_min, _batt_voltage_max);
-
-    // filter at 0.5 Hz
-    // todo: replace with filter object
-    _batt_voltage_filt = _batt_voltage_filt  + 0.007792f*(batt_voltage/_batt_voltage_max-_batt_voltage_filt);         // ratio of current battery voltage to maximum battery voltage
-    _lift_max = _batt_voltage_filt*(1-_thrust_curve_expo) + _thrust_curve_expo*_batt_voltage_filt*_batt_voltage_filt;
+    return (_rc_throttle.radio_max-_rc_throttle.radio_min)*thr/1000.0f;
 }
