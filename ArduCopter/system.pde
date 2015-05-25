@@ -308,7 +308,7 @@ static void startup_ground(bool force_gyro_cal)
 
 #if FRAME_CONFIG == TILTROTOR_Y6_FRAME
     if (airspeed.enabled()) {
-        initialize airspeed sensor
+        //initialize airspeed sensor
         // --------------------------
         zero_airspeed(true);
    } else {
