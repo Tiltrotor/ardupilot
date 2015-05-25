@@ -4227,7 +4227,7 @@ void NavEKF::writeOptFlowMeas(uint8_t &rawFlowQuality, Vector2f &rawFlowRates, V
         statesAtFlowTime.quat.rotation_matrix(Tbn_flow);
         Tnb_flow = Tbn_flow.transposed();
         // correct flow sensor rates for bias
-        
+
         omegaAcrossFlowTime.x = rawGyroRates.x - flowGyroBias.x;
         omegaAcrossFlowTime.y = rawGyroRates.y - flowGyroBias.y;
         // write uncorrected flow rate measurements that will be used by the focal length scale factor estimator
@@ -4708,37 +4708,6 @@ void  NavEKF::getFilterStatus(nav_filter_status &status) const
     status.flags.const_pos_mode = constPosMode && filterHealthy;     // constant position mode
     status.flags.pred_horiz_pos_rel = (optFlowNavPossible || gpsNavPossible) && filterHealthy; // we should be able to estimate a relative position when we enter flight mode
     status.flags.pred_horiz_pos_abs = gpsNavPossible && filterHealthy; // we should be able to estimate an absolute position when we enter flight mode
-}
-
-// send an EKF_STATUS message to GCS
-void NavEKF::send_status_report(mavlink_channel_t chan)
-{
-    // get filter status
-    nav_filter_status filt_state;
-    getFilterStatus(filt_state);
-
-    // prepare flags
-    uint16_t flags = 0;
-    if (filt_state.flags.attitude) { flags |= EKF_ATTITUDE; }
-    if (filt_state.flags.horiz_vel) { flags |= EKF_VELOCITY_HORIZ; }
-    if (filt_state.flags.vert_vel) { flags |= EKF_VELOCITY_VERT; }
-    if (filt_state.flags.horiz_pos_rel) { flags |= EKF_POS_HORIZ_REL; }
-    if (filt_state.flags.horiz_pos_abs) { flags |= EKF_POS_HORIZ_ABS; }
-    if (filt_state.flags.vert_pos) { flags |= EKF_POS_VERT_ABS; }
-    if (filt_state.flags.terrain_alt) { flags |= EKF_POS_VERT_AGL; }
-    if (filt_state.flags.const_pos_mode) { flags |= EKF_CONST_POS_MODE; }
-    if (filt_state.flags.pred_horiz_pos_rel) { flags |= EKF_PRED_POS_HORIZ_REL; }
-    if (filt_state.flags.pred_horiz_pos_abs) { flags |= EKF_PRED_POS_HORIZ_ABS; }
-
-    // get variances
-    float velVar, posVar, hgtVar, tasVar;
-    Vector3f magVar;
-    Vector2f offset;
-    getVariances(velVar, posVar, hgtVar, magVar, tasVar, offset);
-
-    // send message
-    mavlink_msg_ekf_status_report_send(chan, flags, velVar, posVar, hgtVar, magVar.length(), tasVar);
-
 }
 
 // send an EKF_STATUS message to GCS
