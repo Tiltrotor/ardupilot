@@ -1,7 +1,7 @@
 // -*- tab-width: 4; Mode: C++; c-basic-offset: 4; indent-tabs-mode: nil -*-
 
-/// @file	AP_MotorsTiltrotor_Y6.h (Started with Copy paste of AP_MotorsSingle.h)
-/// @brief	Motor and Servo control class for Tiltrotor_Y6
+/// @file	AP_MotorsSingle.h
+/// @brief	Motor and Servo control class for Singlecopters
 
 #ifndef __AP_MOTORS_TRY6_H__
 #define __AP_MOTORS_TRY6_H__
@@ -41,6 +41,19 @@ public:
     // set update rate to motors - a value in hertz
     void                set_update_rate( uint16_t speed_hz );
 
+
+///tiltrotor mike
+//udpate: removed const and it still works.  wtf
+    //i had to add the "const" to get it to work.  need to look this up
+    void set_roll_aero(int16_t roll_aero_in)  { _servo1.servo_out = roll_aero_in; };
+    void set_pitch_aero(int16_t pitch_aero_in)  { _servo2.servo_out = pitch_aero_in; };
+    void set_yaw_mot(int16_t yaw_mot_in) { _servo3.servo_out = yaw_mot_in; };
+    void set_tvec_pwm(int16_t tvec_pwm) { _servo4.radio_out = tvec_pwm; };
+    void set_gear_pwm(int16_t gear_pwm) { _servo1.radio_in = gear_pwm; };
+
+
+
+
     // enable - starts allowing signals to be sent to motors
     virtual void        enable();
 
@@ -60,9 +73,15 @@ public:
     static const struct AP_Param::GroupInfo var_info[];
 
 protected:
+
     // output - sends commands to the motors
-    virtual void        output_armed();
-    virtual void        output_disarmed();
+    // TREVOR ADDED 3.3 Rebase (removed output_armed(); and output_disarmed();)
+    void output_armed_stabilizing();
+    void output_armed_not_stabilizing();
+    void output_disarmed();
+
+
+
 
     AP_Int8             _rev_roll;      // REV Roll feedback
     AP_Int8             _rev_pitch;     // REV pitch feedback
@@ -74,4 +93,4 @@ protected:
     RC_Channel&         _servo4;
 };
 
-#endif  // AP_MOTORSTILTROTOR_Y6
+#endif  // AP_MOTORS TILTROTOR_Y6
